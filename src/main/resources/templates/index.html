@@ -5,7 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Todo App</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-    <c:url value="/img/pic_main.jpg" var="picture"></c:url>
+
+    <style>
+        .d-on-hover{
+            visibility:hidden;
+        }
+        .d-on-hover:hover{
+            visibility:visible;
+            background:color:#888888;
+            color:red;
+        }
+    </style>
 </head>
 <body>
 
@@ -38,9 +48,48 @@
 <main>
 <div class="container px-5">
     <div class="row">
-        <div class="col-lg-6 col-sm-12"><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p></div>
+        <div class="col-lg-6 col-sm-12"><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+            eiusmod tempor incididunt ut labore et dolore magna aliqua.
+            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+        </div>
         <div class="col-lg-6 col-sm-12">
-            <img alt="" src="/img/pic.jpg">
+            <img class="img img-fluid" src="../static/img/pic.jpg">
+        </div>
+    </div>
+    <div class="row py-4 justify-content-center">
+        <div class="col-sm-2 position-relative">
+            <img class="img img-fluid" src="../static/img/Leucine.jpg">
+            <figure class="position-absolute d-on-hover">Leucine</figure>
+        </div>
+        <div class="col-sm-2">
+            <img class="img img-fluid" src="../static/img/Isoleucine.jpg">
+        </div>
+        <div class="col-sm-2">
+            <img class="img img-fluid" src="../static/img/Valine.jpg">
+        </div>
+        <div class="col-sm-auto"></div>
+        <div class="col-sm-2 pt-4">
+            <img class="img img-fluid" src="../static/img/Lysine.jpg">
+        </div>
+        <div class="col-sm-2">
+            <img class="img img-fluid" src="../static/img/Threonine.jpg">
+        </div>
+
+    </div>
+    <div class="row py4">
+        <div class="col-sm-3">
+            <img class="img img-fluid" src="../static/img/Tryptophane.jpg">
+        </div>
+        <div class="col-sm-3">
+            <img class="img img-fluid" src="../static/img/Methionine.jpg">
+        </div>
+        <div class="col-sm-3">
+            <img class="img img-fluid" src="../static/img/Phenylalanine.jpg">
+        </div>
+        <div class="col-sm-3">
+            <img class="img img-fluid" src="../static/img/Histidine.jpg">
         </div>
     </div>
 
