@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:sec="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Todo App</title>
+    <title>AminoAcidsApp</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 
     <style>
@@ -15,13 +15,17 @@
             background:color:#888888;
             color:red;
         }
+        .custom-background{
+            background: url(/img/pic.jpg);
+            background-size: cover;
+        }
     </style>
 </head>
 <body>
-
+<div class="container custom-background">
 <nav>
     <div class="row mx-4 py-3 bg-dark">
-        <div class="col-sm-6 navbar navbar-expand-lg navbar-dark ">
+        <div class="col-sm-8 navbar navbar-expand-lg navbar-dark ">
             <ul class="navbar-nav mx-2 px-3">
                 <li class="nav-item mr-2 text-white">Skomponuj posiłek</li>
                 <li class="nav-item mr-2 text-white">Przegląd popularnych składników</li>
@@ -29,7 +33,7 @@
                 <li class="nav-item mr-2 text-white">Statystyka (user)</li>
             </ul>
         </div>
-        <div class="col-sm-6 text-right">
+        <div class="col-sm-4 text-right">
             <button class="btn btn-primary">Zaloguj się</button>
             <button class="btn btn-primary">Zarejestruj się</button>
         </div>
@@ -48,52 +52,52 @@
 <main>
 <div class="container px-5">
     <div class="row">
-        <div class="col-lg-6 col-sm-12"><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+        <div class="col-lg-8 col-sm-12"><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
             eiusmod tempor incididunt ut labore et dolore magna aliqua.
             Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
             Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
             Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
         </div>
-        <div class="col-lg-6 col-sm-12">
-            <img class="img img-fluid" src="../static/img/pic.jpg">
+        <div class="col-lg-4 d-sm-none d-lg-block">
+            <img class="img img-fluid" th:src="@{/img/pic.jpg}">
         </div>
     </div>
     <div class="row py-4 justify-content-center">
         <div class="col-sm-2 position-relative">
-            <img class="img img-fluid" src="../static/img/Leucine.jpg">
+            <img class="img img-fluid" th:src="@{/img/Leucine.jpg}">
             <figure class="position-absolute d-on-hover">Leucine</figure>
         </div>
         <div class="col-sm-2">
-            <img class="img img-fluid" src="../static/img/Isoleucine.jpg">
+            <img class="img img-fluid" th:src="@{/img/Isoleucine.jpg}">
         </div>
         <div class="col-sm-2">
-            <img class="img img-fluid" src="../static/img/Valine.jpg">
+            <img class="img img-fluid" th:src="@{/img/Valine.jpg}">
         </div>
-        <div class="col-sm-auto"></div>
         <div class="col-sm-2 pt-4">
-            <img class="img img-fluid" src="../static/img/Lysine.jpg">
+            <img class="img img-fluid" th:src="@{/img/Lysine.jpg}">
         </div>
         <div class="col-sm-2">
-            <img class="img img-fluid" src="../static/img/Threonine.jpg">
+            <img class="img img-fluid" th:src="@{/img/Threonine.jpg}">
         </div>
 
     </div>
     <div class="row py4">
         <div class="col-sm-3">
-            <img class="img img-fluid" src="../static/img/Tryptophane.jpg">
+            <img class="img img-fluid" th:src="@{/img/Tryptophane.jpg}">
         </div>
         <div class="col-sm-3">
-            <img class="img img-fluid" src="../static/img/Methionine.jpg">
+            <img class="img img-fluid" th:src="@{/img/Methionine.jpg}">
         </div>
         <div class="col-sm-3">
-            <img class="img img-fluid" src="../static/img/Phenylalanine.jpg">
+            <img class="img img-fluid" th:src="@{/img/Phenylalanine.jpg}">
         </div>
         <div class="col-sm-3">
-            <img class="img img-fluid" src="../static/img/Histidine.jpg">
+            <img class="img img-fluid" th:src="@{/img/Histidine.jpg}">
         </div>
     </div>
 
 </div>
 </main>
+</div>
 </body>
 </html>
