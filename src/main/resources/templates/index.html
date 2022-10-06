@@ -5,21 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AminoAcidsApp</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-
-    <style>
-        .d-on-hover{
-            visibility:hidden;
-        }
-        .d-on-hover:hover{
-            visibility:visible;
-            background:color:#888888;
-            color:red;
-        }
-        .custom-background{
-            background: url(/img/pic.jpg);
-            background-size: cover;
-        }
-    </style>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
 </head>
 <body>
 <div class="container custom-background">
@@ -63,9 +49,9 @@
         </div>
     </div>
     <div class="row py-4 justify-content-center">
-        <div class="col-sm-2 position-relative">
+        <div class="col-sm-2 overlay">
             <img class="img img-fluid" th:src="@{/img/Leucine.jpg}">
-            <figure class="position-absolute d-on-hover">Leucine</figure>
+            <figure class="caption">Leucine</figure>
         </div>
         <div class="col-sm-2">
             <img class="img img-fluid" th:src="@{/img/Isoleucine.jpg}">
@@ -73,7 +59,7 @@
         <div class="col-sm-2">
             <img class="img img-fluid" th:src="@{/img/Valine.jpg}">
         </div>
-        <div class="col-sm-2 pt-4">
+        <div class="col-sm-2">
             <img class="img img-fluid" th:src="@{/img/Lysine.jpg}">
         </div>
         <div class="col-sm-2">

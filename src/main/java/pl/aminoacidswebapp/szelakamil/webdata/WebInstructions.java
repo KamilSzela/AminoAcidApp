@@ -12,7 +12,11 @@ public class WebInstructions implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler(
-                "/img/**"
-        ).addResourceLocations("classpath:/static/img/");
+                "/img/**",
+                "/css/**"
+        ).addResourceLocations(
+                "classpath:/static/img/",
+                "classpath:/static/css/"
+                );
     }
 }
