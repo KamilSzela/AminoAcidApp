@@ -2,14 +2,19 @@
             position: relative;
         }
         .overlay .caption{
-            width: 100%;
+            width: 83%;
             padding: 0px;
             position: absolute;
             background-color:#899;
             display: block;
-            bottom: -15px;
+            bottom: -1rem;
             opacity: 0;
             transition: opacity 0.5s ease-in-out;
+            color: black;
+            pointer: hand;
+        }
+        .caption-big{
+            width: 89% !important;
         }
         .overlay:hover .caption{
             opacity: 0.8;
@@ -17,10 +22,4 @@
         .custom-background{
             background: url(/img/pic.jpg);
             background-size: cover;
-        }
-        p{
-            color: red;
-        }
-        p:hover{
-            color: blue;
         }

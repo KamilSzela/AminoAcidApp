@@ -13,7 +13,7 @@
     <div class="row mx-4 py-3 bg-dark">
         <div class="col-sm-8 navbar navbar-expand-lg navbar-dark ">
             <ul class="navbar-nav mx-2 px-3">
-                <li class="nav-item mr-2 text-white">Skomponuj posiłek</li>
+                <li class="nav-item mr-2 text-white p4">Skomponuj posiłek</li>
                 <li class="nav-item mr-2 text-white">Przegląd popularnych składników</li>
                 <li class="nav-item mr-2 text-white">Zapisane posiłki (user)</li>
                 <li class="nav-item mr-2 text-white">Statystyka (user)</li>
@@ -25,60 +25,86 @@
         </div>
     </div>
 </nav>
-<header>
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-9 p-3">
-                <h1>Aminokwasy w diecie</h1>
-                <p class="panel">Aplikacja służąca obliczaniu zawartości aminokwasów!</p>
-            </div>
-        </div>
-    </div>
-</header>
+
 <main>
 <div class="container px-5">
-    <div class="row">
-        <div class="col-lg-8 col-sm-12"><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua.
-            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-        </div>
-        <div class="col-lg-4 d-sm-none d-lg-block">
-            <img class="img img-fluid" th:src="@{/img/pic.jpg}">
-        </div>
-    </div>
+    <header>
+            <div class="row">
+                <div class="col-lg-7 p-3">
+                    <h1>Aminokwasy w diecie</h1>
+                    <p class="panel">Aplikacja służąca obliczaniu zawartości aminokwasów!</p>
+                    <div class="row">
+                        <div class="col-sm-12 mt-3"><p>Lorem ipsum dolor sit amet, consectetur adipiscing
+                            elit, sed do
+                            eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-5 d-sm-none d-lg-block p-3 align-self-center">
+                    <img class="img img-fluid" th:src="@{/img/pic.jpg}">
+                </div>
+            </div>
+    </header>
     <div class="row py-4 justify-content-center">
         <div class="col-sm-2 overlay">
-            <img class="img img-fluid" th:src="@{/img/Leucine.jpg}">
-            <figure class="caption">Leucine</figure>
+            <a th:href="@{https://pl.wikipedia.org/wiki/Leucyna}" target="_blank">
+                <img class="img img-fluid" th:src="@{/img/Leucine.jpg}">
+                <figure class="caption text-center">Leucyna</figure>
+            </a>
         </div>
-        <div class="col-sm-2">
-            <img class="img img-fluid" th:src="@{/img/Isoleucine.jpg}">
+        <div class="col-sm-2 overlay">
+            <a th:href="@{https://pl.wikipedia.org/wiki/Izoleucyna}" target="_blank">
+                <img class="img img-fluid" th:src="@{/img/Isoleucine.jpg}">
+                <figure class="caption text-center">Izoleucyna</figure>
+            </a>
         </div>
-        <div class="col-sm-2">
-            <img class="img img-fluid" th:src="@{/img/Valine.jpg}">
+        <div class="col-sm-2 overlay">
+            <a th:href="@{https://pl.wikipedia.org/wiki/Walina}" target="_blank">
+                <img class="img img-fluid" th:src="@{/img/Valine.jpg}">
+                <figure class="caption text-center">Walina</figure>
+            </a>
         </div>
-        <div class="col-sm-2">
-            <img class="img img-fluid" th:src="@{/img/Lysine.jpg}">
+        <div class="col-sm-2 overlay">
+            <a th:href="@{https://pl.wikipedia.org/wiki/Lizyna}" target="_blank">
+                <img class="img img-fluid" th:src="@{/img/Lysine.jpg}">
+                <figure class="caption text-center">Lizyna</figure>
+            </a>
         </div>
-        <div class="col-sm-2">
-            <img class="img img-fluid" th:src="@{/img/Threonine.jpg}">
+        <div class="col-sm-2 overlay">
+            <a th:href="@{https://pl.wikipedia.org/wiki/Treonina}" target="_blank">
+                <img class="img img-fluid" th:src="@{/img/Threonine.jpg}">
+                <figure class="caption text-center">Treonina</figure>
+            </a>
         </div>
 
     </div>
     <div class="row py4">
-        <div class="col-sm-3">
-            <img class="img img-fluid" th:src="@{/img/Tryptophane.jpg}">
+        <div class="col-sm-3 overlay">
+            <a th:href="@{https://pl.wikipedia.org/wiki/Tryptofan}" target="_blank">
+                <img class="img img-fluid" th:src="@{/img/Tryptophane.jpg}">
+                <figure class="caption caption-big text-center">Tryptofan</figure>
+            </a>
         </div>
-        <div class="col-sm-3">
-            <img class="img img-fluid" th:src="@{/img/Methionine.jpg}">
+        <div class="col-sm-3 overlay">
+            <a th:href="@{https://pl.wikipedia.org/wiki/Metionina}" target="_blank">
+                <img class="img img-fluid" th:src="@{/img/Methionine.jpg}">
+                <figure class="caption caption-big text-center">Metionina</figure>
+            </a>
         </div>
-        <div class="col-sm-3">
-            <img class="img img-fluid" th:src="@{/img/Phenylalanine.jpg}">
+        <div class="col-sm-3 overlay">
+            <a th:href="@{https://pl.wikipedia.org/wiki/Fenyloalanina}" target="_blank">
+                <img class="img img-fluid" th:src="@{/img/Phenylalanine.jpg}">
+                <figure class="caption caption-big text-center">Fenyloalanina</figure>
+            </a>
         </div>
-        <div class="col-sm-3">
-            <img class="img img-fluid" th:src="@{/img/Histidine.jpg}">
+        <div class="col-sm-3 overlay">
+            <a th:href="@{https://pl.wikipedia.org/wiki/Histydyna}" target="_blank">
+                <img class="img img-fluid" th:src="@{/img/Histidine.jpg}">
+                <figure class="caption caption-big text-center">Histydyna</figure>
+            </a>
         </div>
     </div>
 
