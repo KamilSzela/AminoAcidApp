@@ -9,22 +9,28 @@
 </head>
 <body>
 <div class="container custom-background">
-<nav>
-    <div class="row mx-4 py-3 bg-dark">
-        <div class="col-sm-8 navbar navbar-expand-lg navbar-dark ">
-            <ul class="navbar-nav mx-2 px-3">
-                <li class="nav-item mr-2 text-white p4">Skomponuj posiłek</li>
-                <li class="nav-item mr-2 text-white">Przegląd popularnych składników</li>
-                <li class="nav-item mr-2 text-white">Zapisane posiłki (user)</li>
-                <li class="nav-item mr-2 text-white">Statystyka (user)</li>
+    <a class ="d-none" href="http://www.freepik.com">Designed by starline / Freepik</a>
+
+    <div class="row mx-4 py-3 bg-dark" >
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        <div class="col-sm-8 collapse navbar-collapse" id="navbar">
+            <ul class="navbar-nav mx-2 px-3 w-100 text-center">
+                <li class="nav-item mr-2 text-white menu-item">Skomponuj posiłek</li>
+                <li class="nav-item mr-2 text-white menu-item">Przegląd składników</li>
+                <li class="nav-item mr-2 text-white menu-item">Zapisane posiłki</li>
+                <li class="nav-item mr-2 text-white menu-item">Statystyka</li>
             </ul>
         </div>
+        </nav>
         <div class="col-sm-4 text-right">
             <button class="btn btn-primary">Zaloguj się</button>
             <button class="btn btn-primary">Zarejestruj się</button>
         </div>
     </div>
-</nav>
+
 
 <main>
 <div class="container px-5">
@@ -41,39 +47,43 @@
                             Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
                             Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
                         </div>
+
                     </div>
                 </div>
                 <div class="col-lg-5 d-sm-none d-lg-block p-3 align-self-center">
-                    <img class="img img-fluid" th:src="@{/img/pic.jpg}">
+                    <img class="img img-fluid rounded" th:src="@{/img/pic.jpg}">
+                    <a class="text-muted pic-description"
+                            href="https://pl.freepik.com/darmowe-zdjecie/obraz-zabawnego-czlowieka-z-falszywymi-ramionami-miesni_7678743.htm#query=muscle&position=48&from_view=search">
+                        Obraz autorstwa cookie_studio na Freepik </a>
                 </div>
             </div>
     </header>
     <div class="row py-4 justify-content-center">
-        <div class="col-sm-2 overlay">
+        <div class="col-sm-2 overlay d-none d-md-block">
             <a th:href="@{https://pl.wikipedia.org/wiki/Leucyna}" target="_blank">
                 <img class="img img-fluid" th:src="@{/img/Leucine.jpg}">
                 <figure class="caption text-center">Leucyna</figure>
             </a>
         </div>
-        <div class="col-sm-2 overlay">
+        <div class="col-sm-2 overlay d-none d-md-block">
             <a th:href="@{https://pl.wikipedia.org/wiki/Izoleucyna}" target="_blank">
                 <img class="img img-fluid" th:src="@{/img/Isoleucine.jpg}">
                 <figure class="caption text-center">Izoleucyna</figure>
             </a>
         </div>
-        <div class="col-sm-2 overlay">
+        <div class="col-sm-2 overlay d-none d-md-block">
             <a th:href="@{https://pl.wikipedia.org/wiki/Walina}" target="_blank">
                 <img class="img img-fluid" th:src="@{/img/Valine.jpg}">
                 <figure class="caption text-center">Walina</figure>
             </a>
         </div>
-        <div class="col-sm-2 overlay">
+        <div class="col-sm-2 overlay d-none d-md-block">
             <a th:href="@{https://pl.wikipedia.org/wiki/Lizyna}" target="_blank">
                 <img class="img img-fluid" th:src="@{/img/Lysine.jpg}">
                 <figure class="caption text-center">Lizyna</figure>
             </a>
         </div>
-        <div class="col-sm-2 overlay">
+        <div class="col-sm-2 overlay d-none d-md-block">
             <a th:href="@{https://pl.wikipedia.org/wiki/Treonina}" target="_blank">
                 <img class="img img-fluid" th:src="@{/img/Threonine.jpg}">
                 <figure class="caption text-center">Treonina</figure>
@@ -81,26 +91,26 @@
         </div>
 
     </div>
-    <div class="row py4">
-        <div class="col-sm-3 overlay">
+    <div class="row py4 mb-2">
+        <div class="col-sm-3 overlay d-none d-md-block">
             <a th:href="@{https://pl.wikipedia.org/wiki/Tryptofan}" target="_blank">
                 <img class="img img-fluid" th:src="@{/img/Tryptophane.jpg}">
                 <figure class="caption caption-big text-center">Tryptofan</figure>
             </a>
         </div>
-        <div class="col-sm-3 overlay">
+        <div class="col-sm-3 overlay d-none d-md-block">
             <a th:href="@{https://pl.wikipedia.org/wiki/Metionina}" target="_blank">
                 <img class="img img-fluid" th:src="@{/img/Methionine.jpg}">
                 <figure class="caption caption-big text-center">Metionina</figure>
             </a>
         </div>
-        <div class="col-sm-3 overlay">
+        <div class="col-sm-3 overlay d-none d-md-block">
             <a th:href="@{https://pl.wikipedia.org/wiki/Fenyloalanina}" target="_blank">
                 <img class="img img-fluid" th:src="@{/img/Phenylalanine.jpg}">
                 <figure class="caption caption-big text-center">Fenyloalanina</figure>
             </a>
         </div>
-        <div class="col-sm-3 overlay">
+        <div class="col-sm-3 overlay d-none d-md-block">
             <a th:href="@{https://pl.wikipedia.org/wiki/Histydyna}" target="_blank">
                 <img class="img img-fluid" th:src="@{/img/Histidine.jpg}">
                 <figure class="caption caption-big text-center">Histydyna</figure>
