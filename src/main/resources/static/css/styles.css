@@ -1,0 +1,34 @@
+        .overlay{
+            position: relative;
+        }
+        .overlay .caption{
+            width: 83%;
+            padding: 0px;
+            position: absolute;
+            background-color:#899;
+            display: block;
+            bottom: -1rem;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+            color: black;
+            pointer: hand;
+        }
+        .caption-big{
+            width: 89% !important;
+        }
+        .overlay:hover .caption{
+            opacity: 0.8;
+        }
+        .custom-background{
+            background: url(/img/tlo.jpg);
+            background-size: cover;
+        }
+        .pic-description{
+            font-size: 0.6rem;
+        }
+        .menu-item{
+            font-size:0.8rem;
+            padding-right: 0.6rem;
+            padding-left: 0.6rem;
+            width: 100%;
+        }

@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AminoAcidsApp</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
+</head>
+<body>
+<div class="container custom-background">
+    <a class ="d-none" href="http://www.freepik.com">Designed by starline / Freepik</a>
+
+    <div class="row mx-4 py-3 bg-dark" >
+        <div class="col-sm-9 col-xs-12">
+            <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse align-items-center" id="navbar">
+                    <ul class="navbar-nav mx-2 px-3 w-100 text-center">
+                        <li class="nav-item mr-2 text-white menu-item font-weight-bold"><i
+                                class="bi bi-basket"></i><span class="ml-1">Skomponuj
+                            posiłek</span></li>
+                        <li class="nav-item mr-2 text-white menu-item font-weight-bold"><i
+                                class="bi bi-list-columns"></i><span class="ml-1">Przegląd składników</span></li>
+                        <li class="nav-item mr-2 text-white menu-item font-weight-bold"><i
+                                class="bi bi-folder2-open"></i><span class="ml-1">Zapisane posiłki</span></li>
+                        <li class="nav-item mr-2 text-white menu-item font-weight-bold"><i
+                                class="bi bi-graph-up-arrow"></i><span class="ml-1">Statystyka</span></li>
+                    </ul>
+                </div>
+            </nav>
+        </div>
+        <div class="col-sm-3 text-right d-none d-md-block">
+            <button class="btn btn-primary">Zaloguj się</button>
+            <button class="btn btn-primary">Zarejestruj się</button>
+        </div>
+        <div class="col-xs-12 w-100 mx-2 d-block d-md-none">
+            <button class="btn btn-primary w-100 mb-2">Zaloguj się</button>
+            <button class="btn btn-primary w-100 ">Zarejestruj się</button>
+        </div>
+    </div>
+
+
+<main>
+<div class="container px-5">
+    <header>
+            <div class="row">
+                <div class="col-lg-7 p-3">
+                    <h1>Aminokwasy w diecie</h1>
+                    <p class="panel">Aplikacja służąca obliczaniu zawartości aminokwasów!</p>
+                    <div class="row">
+                        <div class="col-sm-12 mt-3">
+                            <p> Jednym z największych wyzwań dla osób na diecie wegańskiej jest zapewnienie organizmowi
+                                wystarczającej dozy składników odżywczych, zwłaszcza wysokojakościowego białka czy
+                                witaminy B<sub>12</sub>.
+                            </p>
+                            <p>Białko roślinne dostarczane z pożywieniem jest niepełnowartościowe tj. nie dostarcza w
+                                odpowiedniej ilości wszystkich aminokwasów egzogennych, czyli takich których organizm ludzki nie jest w stanie sam wytworzyć.
+                                Na szczęście mieszając białko roślinne z różnych źródeł jesteśmy w stanie dostarczyć odpowiednią ilość wszystkich niezbędnych aminokwasów.
+                                Do aminokwasów egzogennych zaliczamy: leucynę, izoleucynę,  walinę, lizynę, treoninę, tryptofan, metioninę, fenyloalaninę i histydynę.
+                            </p>
+                            <p>Aplikacja którą masz przed Sobą wspomaga w planowaniu posiłków opartych o dietę
+                                roślinną, obliczając zawartość poszczególnych aminokwasów w przygotowanym posiłku i ukazując ewentualne niedobory.
+                            </p>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-lg-5 d-sm-none d-lg-block p-3 align-self-center">
+                    <img class="img img-fluid rounded" th:src="@{/img/pic.jpg}">
+                    <a class="text-muted pic-description"
+                            href="https://pl.freepik.com/darmowe-zdjecie/obraz-zabawnego-czlowieka-z-falszywymi-ramionami-miesni_7678743.htm#query=muscle&position=48&from_view=search">
+                        Obraz autorstwa cookie_studio na Freepik </a>
+                </div>
+            </div>
+    </header>
+    <div class="row py-4 justify-content-center">
+        <div class="col-sm-2 overlay d-none d-md-block">
+            <a th:href="@{https://pl.wikipedia.org/wiki/Leucyna}" target="_blank">
+                <img class="img img-fluid" th:src="@{/img/Leucine.jpg}">
+                <figure class="caption text-center">Leucyna</figure>
+            </a>
+        </div>
+        <div class="col-sm-2 overlay d-none d-md-block">
+            <a th:href="@{https://pl.wikipedia.org/wiki/Izoleucyna}" target="_blank">
+                <img class="img img-fluid" th:src="@{/img/Isoleucine.jpg}">
+                <figure class="caption text-center">Izoleucyna</figure>
+            </a>
+        </div>
+        <div class="col-sm-2 overlay d-none d-md-block">
+            <a th:href="@{https://pl.wikipedia.org/wiki/Walina}" target="_blank">
+                <img class="img img-fluid" th:src="@{/img/Valine.jpg}">
+                <figure class="caption text-center">Walina</figure>
+            </a>
+        </div>
+        <div class="col-sm-2 overlay d-none d-md-block">
+            <a th:href="@{https://pl.wikipedia.org/wiki/Lizyna}" target="_blank">
+                <img class="img img-fluid" th:src="@{/img/Lysine.jpg}">
+                <figure class="caption text-center">Lizyna</figure>
+            </a>
+        </div>
+        <div class="col-sm-2 overlay d-none d-md-block">
+            <a th:href="@{https://pl.wikipedia.org/wiki/Treonina}" target="_blank">
+                <img class="img img-fluid" th:src="@{/img/Threonine.jpg}">
+                <figure class="caption text-center">Treonina</figure>
+            </a>
+        </div>
+
+    </div>
+    <div class="row py4 mb-2">
+        <div class="col-sm-3 overlay d-none d-md-block">
+            <a th:href="@{https://pl.wikipedia.org/wiki/Tryptofan}" target="_blank">
+                <img class="img img-fluid" th:src="@{/img/Tryptophane.jpg}">
+                <figure class="caption caption-big text-center">Tryptofan</figure>
+            </a>
+        </div>
+        <div class="col-sm-3 overlay d-none d-md-block">
+            <a th:href="@{https://pl.wikipedia.org/wiki/Metionina}" target="_blank">
+                <img class="img img-fluid" th:src="@{/img/Methionine.jpg}">
+                <figure class="caption caption-big text-center">Metionina</figure>
+            </a>
+        </div>
+        <div class="col-sm-3 overlay d-none d-md-block">
+            <a th:href="@{https://pl.wikipedia.org/wiki/Fenyloalanina}" target="_blank">
+                <img class="img img-fluid" th:src="@{/img/Phenylalanine.jpg}">
+                <figure class="caption caption-big text-center">Fenyloalanina</figure>
+            </a>
+        </div>
+        <div class="col-sm-3 overlay d-none d-md-block">
+            <a th:href="@{https://pl.wikipedia.org/wiki/Histydyna}" target="_blank">
+                <img class="img img-fluid" th:src="@{/img/Histidine.jpg}">
+                <figure class="caption caption-big text-center">Histydyna</figure>
+            </a>
+        </div>
+    </div>
+
+</div>
+</main>
+</div>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+</body>
+</html>
