@@ -1,7 +1,9 @@
 package pl.aminoacidswebapp.szelakamil.controllers;
 
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -20,13 +22,18 @@ public class CommonIngredientsController {
         this.repository = repository;
     }
 
-    @RequestMapping(method = RequestMethod.GET)
+    @RequestMapping(method = RequestMethod.GET, path = "/getAll", produces = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<List<Food>> readAllFoods(){
         return ResponseEntity.ok(repository.findAll());
     }
 
-    @RequestMapping(path = "/{id}", method = RequestMethod.GET)
+    @RequestMapping(path = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<Food> findFoodById(@PathVariable Integer id){
         return repository.findByid(id).map( food -> ResponseEntity.ok(food)).orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping(produces = MediaType.TEXT_HTML_VALUE)
+    String showPage(){
+        return "commonIngredients";
     }
 }
