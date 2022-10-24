@@ -56,7 +56,7 @@
                         <option>2</option>
                     </select>
                 </div>
-                <div class="col-sm-12">
+                <div class="col-sm-12" id="summaryContainer">
                     SummaryFiled
                 </div>
             </div>
@@ -75,15 +75,21 @@
 <script>
     $(document).ready(function(){
         const response = fetch('/commonIngredients/getAll').then( (response) => {
-                if(response.ok){
-                    const options = response.json();
-                    const select = $('#ingredientPicker').html('<option>A</option>');
-                    createList(options);
+                const contentType = response.headers.get('content-type');
+                if(response.ok && contentType.includes('application/json')){
+                    return response.json();
                 }
+            }).then((json) => {
+                const select = $('#ingredientPicker').html(createList(json));
             });
 
-        function createList(options) {
-            console.log({options});
+        function createList(json) {
+            let htmlPrepared;
+            json.forEach( option => {
+                htmlPrepared += '<option>' + option.name + '</option>';
+            });
+            $('#summaryContainer').html(json[0].protein);
+            return htmlPrepared;
         }
     });
 </script>
