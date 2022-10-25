@@ -56,13 +56,13 @@
                         <option>2</option>
                     </select>
                 </div>
-                <div class="col-sm-12" id="summaryContainer">
-                    SummaryFiled
+                <div class="col-sm-12" >
+                    <div class="row" id="summaryContainer"></div>
                 </div>
             </div>
             <div class="row">
                 <div class="col-sm-12" id="chartContainer">
-                    Chart container
+                    <canvas id="chart"></canvas>
                 </div>
             </div>
         </div>
@@ -72,23 +72,84 @@
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 <script>
-    $(document).ready(function(){
+    $(document).ready(function() {
+        var ingredients;
         const response = fetch('/commonIngredients/getAll').then( (response) => {
                 const contentType = response.headers.get('content-type');
                 if(response.ok && contentType.includes('application/json')){
                     return response.json();
                 }
             }).then((json) => {
-                const select = $('#ingredientPicker').html(createList(json));
+                ingredients = json;
+                prepareSummary(json[0]);
+                prepareChart(json[0]);
+                $('#ingredientPicker').html(createList(json));
+                $('#ingredientPicker').change(function() {
+                    var value = $("select option:selected").val();
+                    prepareSummary(json[value]);
+                    prepareChart(json[value]);
+                });
             });
+
+        function prepareSummary(ingredient) {
+            var innerHtml = '<div class=\"col-sm-12 text-center px-3 my-2\"><h2>Podsumowanie dla 100g wybranego \
+            składnika</h2></div>';
+            innerHtml += '<div class=\"col-sm-6\"> Zawartość kaloryczna: ' + ingredient.energy + 'kcal</div>';
+            innerHtml += '<div class=\"col-sm-6\"> Ilość białka: ' + ingredient.protein + 'g</div>';
+            innerHtml += '<div class=\"col-sm-6\"> Ilość węglowodanów: ' + ingredient.carbs + 'g</div>';
+            innerHtml += '<div class=\"col-sm-6\"> Ilość tłuszczu: ' + ingredient.fat + 'g</div>';
+            $('#summaryContainer').html(innerHtml);
+        }
+
+        function prepareChart(ingredient) {
+            $('canvas#chart').remove();
+            $('#chartContainer').append('<canvas id="chart"></canvas>');
+             const labels = [
+                'Izoleucyna',
+                'Leucyna',
+                'Lizyna',
+                'Metionina',
+                'Cysteina',
+                'Fenyloalanina',
+                'Tyrozyna',
+                'Treonina',
+                'Tryptofan',
+                'Walina',
+                'Histydyna'
+              ];
+
+              const data = {
+                labels: labels,
+                datasets: [{
+                  label: 'Zawartość aminokwasów mg/100g',
+                  backgroundColor: 'rgb(255, 99, 132)',
+                  borderColor: 'rgb(255, 99, 132)',
+                  data: [ingredient.isoleucine, ingredient.leucine, ingredient.lysine, ingredient.methionine,
+                  ingredient.cysteine, ingredient.phenylalanine, ingredient.tyrosine, ingredient.threonine,
+                  ingredient.tryptophan, ingredient.valine, ingredient.histidine],
+                }]
+              };
+
+              const config = {
+                type: 'bar',
+                data: data,
+                options: {}
+              };
+
+               const myChart = new Chart(
+                document.getElementById('chart'),
+                config
+              );
+        }
 
         function createList(json) {
             let htmlPrepared;
             json.forEach( option => {
-                htmlPrepared += '<option>' + option.name + '</option>';
+                htmlPrepared += '<option value="' + option.id + '">' + option.name + '</option>';
             });
-            $('#summaryContainer').html(json[0].protein);
             return htmlPrepared;
         }
     });
