@@ -57,11 +57,11 @@
                     </select>
                 </div>
                 <div class="col-sm-12" >
-                    <div class="row" id="summaryContainer"></div>
+                    <div class="row text-center py-3" id="summaryContainer"></div>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-sm-12" id="chartContainer">
+            <div class="row justify-content-center">
+                <div class="col-xs-12 col-sm-9" id="chartContainer">
                     <canvas id="chart"></canvas>
                 </div>
             </div>
@@ -76,27 +76,31 @@
 
 <script>
     $(document).ready(function() {
-        var ingredients;
+<!--        var requirements;-->
+<!--        const requirementResponse = fetch('/commonIngredients/requirements').then( (response) => {-->
+<!--            return response.json();-->
+<!--        }).then( (json) => {-->
+<!--            requirements = json[0];-->
+<!--        });-->
         const response = fetch('/commonIngredients/getAll').then( (response) => {
                 const contentType = response.headers.get('content-type');
                 if(response.ok && contentType.includes('application/json')){
                     return response.json();
                 }
-            }).then((json) => {
-                ingredients = json;
+            }).then( (json) => {
                 prepareSummary(json[0]);
                 prepareChart(json[0]);
                 $('#ingredientPicker').html(createList(json));
                 $('#ingredientPicker').change(function() {
                     var value = $("select option:selected").val();
-                    prepareSummary(json[value]);
-                    prepareChart(json[value]);
+                    prepareSummary(json[value - 1]);
+                    prepareChart(json[value - 1]);
                 });
             });
 
         function prepareSummary(ingredient) {
-            var innerHtml = '<div class=\"col-sm-12 text-center px-3 my-2\"><h2>Podsumowanie dla 100g wybranego \
-            składnika</h2></div>';
+            var innerHtml = '<div class=\"col-sm-12\"><h3>Podsumowanie dla 100g wybranego \
+            składnika</h3></div>';
             innerHtml += '<div class=\"col-sm-6\"> Zawartość kaloryczna: ' + ingredient.energy + 'kcal</div>';
             innerHtml += '<div class=\"col-sm-6\"> Ilość białka: ' + ingredient.protein + 'g</div>';
             innerHtml += '<div class=\"col-sm-6\"> Ilość węglowodanów: ' + ingredient.carbs + 'g</div>';
@@ -107,14 +111,14 @@
         function prepareChart(ingredient) {
             $('canvas#chart').remove();
             $('#chartContainer').append('<canvas id="chart"></canvas>');
+<!--            console.log(requirements);-->
              const labels = [
                 'Izoleucyna',
                 'Leucyna',
                 'Lizyna',
                 'Metionina',
                 'Cysteina',
-                'Fenyloalanina',
-                'Tyrozyna',
+                'Fenyloalanina + Tyrozyna',
                 'Treonina',
                 'Tryptofan',
                 'Walina',
@@ -123,20 +127,28 @@
 
               const data = {
                 labels: labels,
-                datasets: [{
-                  label: 'Zawartość aminokwasów mg/100g',
-                  backgroundColor: 'rgb(255, 99, 132)',
-                  borderColor: 'rgb(255, 99, 132)',
-                  data: [ingredient.isoleucine, ingredient.leucine, ingredient.lysine, ingredient.methionine,
-                  ingredient.cysteine, ingredient.phenylalanine, ingredient.tyrosine, ingredient.threonine,
-                  ingredient.tryptophan, ingredient.valine, ingredient.histidine],
-                }]
+                datasets: [
+                    {
+                      label: 'Zawartość aminokwasów mg/100g',
+                      backgroundColor: 'rgb(255, 99, 132)',
+                      data: [ingredient.isoleucine, ingredient.leucine, ingredient.lysine, ingredient.methionine,
+                      ingredient.cysteine, ingredient.phenylalanine + ingredient.tyrosine, ingredient.threonine,
+                      ingredient.tryptophan, ingredient.valine, ingredient.histidine],
+                    },
+                    {
+                        label: 'Zapotrzebowanie dla 70kg dorosłego',
+                        data: [1400, 2730, 2100, 700, 280, 1750, 1050, 280, 1820, 700],
+                        backgroundColor: 'rgb(132, 45, 200)',
+                    }
+                ]
               };
 
               const config = {
                 type: 'bar',
                 data: data,
-                options: {}
+                options: {
+                    responsive:true,
+                }
               };
 
                const myChart = new Chart(
