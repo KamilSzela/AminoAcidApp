@@ -13,6 +13,10 @@ public class HomeController {
 
     RequirementRepository repository;
 
+    HomeController (RequirementRepository repo) {
+        this.repository = repo;
+    }
+
     @RequestMapping("/")
     String returnHomePage() {
         return "index";

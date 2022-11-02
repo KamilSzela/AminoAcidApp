@@ -59,6 +59,20 @@
                 <div class="col-sm-12" >
                     <div class="row text-center py-3" id="summaryContainer"></div>
                 </div>
+                <div class="col-sm-12 ">
+                    <div class="row  align-items-center">
+                        <div class="col-sm-8">
+                            <label for="massInput" class="mx-1 mb-0">Wpisz swoją masę do obliczeń zapotrzebowania:
+                            </label>
+                        </div>
+                        <div class="col-sm-4 input-group">
+                            <input type="number" id="massInput" class="form-control" placeholder="Wpisz masę w kg">
+                            <div class="input-group-append">
+                                <span class="input-group-text"> kg</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="row justify-content-center">
                 <div class="col-xs-12 col-sm-9" id="chartContainer">
@@ -76,13 +90,16 @@
 
 <script>
     $(document).ready(function() {
-<!--        var requirements;-->
-<!--        const requirementResponse = fetch('/commonIngredients/requirements').then( (response) => {-->
-<!--            return response.json();-->
-<!--        }).then( (json) => {-->
-<!--            requirements = json[0];-->
-<!--        });-->
-        const response = fetch('/commonIngredients/getAll').then( (response) => {
+        var requirements;
+        const requirementResponse = fetch('/requirements').then( (response) => {
+            return response.json();
+        }).then( (json) => {
+            requirements = json;
+            getIngredientsData();
+        });
+
+        function getIngredientsData() {
+                const response = fetch('/commonIngredients/getAll').then( (response) => {
                 const contentType = response.headers.get('content-type');
                 if(response.ok && contentType.includes('application/json')){
                     return response.json();
@@ -97,6 +114,7 @@
                     prepareChart(json[value - 1]);
                 });
             });
+        }
 
         function prepareSummary(ingredient) {
             var innerHtml = '<div class=\"col-sm-12\"><h3>Podsumowanie dla 100g wybranego \
@@ -111,7 +129,35 @@
         function prepareChart(ingredient) {
             $('canvas#chart').remove();
             $('#chartContainer').append('<canvas id="chart"></canvas>');
-<!--            console.log(requirements);-->
+            let mass = $('#massInput').val();
+            if(mass == ""){
+                mass = 70;
+            }
+
+            let requirementsChartLabel = "Zapotrzebowanie dla " + mass + " kg dorosłego";
+
+            let requirementsCalculated = [requirements.isoleucine * mass, requirements.leucine * mass, requirements
+            .lysine * mass, requirements.methionine * mass, requirements.cysteine * mass, requirements
+            .phenylalanine_plus_tyrosine * mass, requirements.threonine * mass, requirements.tryptophan * mass,
+            requirements.histidine * mass];
+
+            let digestibility = ingredient.digestability;
+
+            let digestibilityCorrectedAminoAcidsAmount = [
+                (ingredient.isoleucine * digestibility).toFixed(0),
+                (ingredient.leucine * digestibility).toFixed(0),
+                (ingredient.lysine * digestibility).toFixed(0),
+                (ingredient.methionine * digestibility).toFixed(0),
+                (ingredient.cysteine * digestibility).toFixed(0),
+                ((ingredient.phenylalanine + ingredient.tyrosine) * digestibility).toFixed(0),
+                (ingredient.threonine * digestibility).toFixed(0),
+                (ingredient.tryptophan * digestibility).toFixed(0),
+                (ingredient.valine * digestibility).toFixed(0),
+                (ingredient.histidine * digestibility).toFixed(0)
+            ];
+
+            console.log("Corrected: " + digestibilityCorrectedAminoAcidsAmount);
+
              const labels = [
                 'Izoleucyna',
                 'Leucyna',
@@ -136,8 +182,8 @@
                       ingredient.tryptophan, ingredient.valine, ingredient.histidine],
                     },
                     {
-                        label: 'Zapotrzebowanie dla 70kg dorosłego',
-                        data: [1400, 2730, 2100, 700, 280, 1750, 1050, 280, 1820, 700],
+                        label: requirementsChartLabel,
+                        data: requirementsCalculated,
                         backgroundColor: 'rgb(132, 45, 200)',
                     }
                 ]
@@ -164,6 +210,7 @@
             });
             return htmlPrepared;
         }
+
     });
 </script>
 </body>
