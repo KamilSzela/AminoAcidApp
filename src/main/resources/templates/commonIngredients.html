@@ -66,7 +66,7 @@
                             </label>
                         </div>
                         <div class="col-sm-4 input-group">
-                            <input type="number" id="massInput" class="form-control" placeholder="Wpisz masę w kg">
+                            <input type="text" id="massInput" class="form-control" placeholder="Wpisz masę w kg">
                             <div class="input-group-append">
                                 <span class="input-group-text"> kg</span>
                             </div>
@@ -109,11 +109,18 @@
                 prepareChart(json[0]);
                 $('#ingredientPicker').html(createList(json));
                 $('#ingredientPicker').change(function() {
-                    var value = $("select option:selected").val();
-                    prepareSummary(json[value - 1]);
-                    prepareChart(json[value - 1]);
+                    refreshSite(json);
+                });
+                $('#massInput').change(function() {
+                    refreshSite(json);
                 });
             });
+        }
+
+        function refreshSite(json) {
+            var value = $("select option:selected").val();
+            prepareSummary(json[value - 1]);
+            prepareChart(json[value - 1]);
         }
 
         function prepareSummary(ingredient) {
@@ -130,16 +137,26 @@
             $('canvas#chart').remove();
             $('#chartContainer').append('<canvas id="chart"></canvas>');
             let mass = $('#massInput').val();
-            if(mass == ""){
+            const regExp = /\D/;
+
+            if(mass == "" || regExp.test(mass)){
                 mass = 70;
             }
 
             let requirementsChartLabel = "Zapotrzebowanie dla " + mass + " kg dorosłego";
 
-            let requirementsCalculated = [requirements.isoleucine * mass, requirements.leucine * mass, requirements
-            .lysine * mass, requirements.methionine * mass, requirements.cysteine * mass, requirements
-            .phenylalanine_plus_tyrosine * mass, requirements.threonine * mass, requirements.tryptophan * mass,
-            requirements.histidine * mass];
+            let requirementsCalculated = [
+                requirements.isoleucine * mass,
+                requirements.leucine * mass,
+                requirements.lysine * mass,
+                requirements.methionine * mass,
+                requirements.cysteine * mass,
+                requirements.phenylalanine_plus_tyrosine * mass,
+                requirements.threonine * mass,
+                requirements.tryptophan * mass,
+                requirements.valine * mass,
+                requirements.histidine * mass
+             ];
 
             let digestibility = ingredient.digestability;
 
@@ -155,8 +172,6 @@
                 (ingredient.valine * digestibility).toFixed(0),
                 (ingredient.histidine * digestibility).toFixed(0)
             ];
-
-            console.log("Corrected: " + digestibilityCorrectedAminoAcidsAmount);
 
              const labels = [
                 'Izoleucyna',
@@ -177,9 +192,7 @@
                     {
                       label: 'Zawartość aminokwasów mg/100g',
                       backgroundColor: 'rgb(255, 99, 132)',
-                      data: [ingredient.isoleucine, ingredient.leucine, ingredient.lysine, ingredient.methionine,
-                      ingredient.cysteine, ingredient.phenylalanine + ingredient.tyrosine, ingredient.threonine,
-                      ingredient.tryptophan, ingredient.valine, ingredient.histidine],
+                      data: digestibilityCorrectedAminoAcidsAmount,
                     },
                     {
                         label: requirementsChartLabel,
