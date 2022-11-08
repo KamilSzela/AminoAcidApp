@@ -222,18 +222,26 @@
                       backgroundColor: function(context){
                          const chart = context.chart;
                          const {ctx, chartArea} = chart;
+                         const name = "aminoacids";
                              if (!chartArea) {
-                              // This case happens on initial chart load
                               return;
                             }
-                            return getGradient(ctx, chartArea);
+                            return getGradient(ctx, chartArea, name);
                       },
                       data: digestibilityCorrectedAminoAcidsAmount,
                     },
                     {
                         label: requirementsChartLabel,
                         data: requirementsCalculated,
-                        backgroundColor: 'rgb(132, 45, 200)',
+                        backgroundColor: function(context){
+                         const chart = context.chart;
+                         const {ctx, chartArea} = chart;
+                         const name = "requirements";
+                             if (!chartArea) {
+                              return;
+                            }
+                            return getGradient(ctx, chartArea, name);
+                      },
                     }
                 ]
               };
@@ -260,23 +268,31 @@
             return htmlPrepared;
         }
 
-        function getGradient(ctx, chartArea) {
+        function getGradient(ctx, chartArea, name) {
               let width, height, gradient;
               const chartWidth = chartArea.right - chartArea.left;
               const chartHeight = chartArea.bottom - chartArea.top;
               if (!gradient || width !== chartWidth || height !== chartHeight) {
-                // Create the gradient because this is either the first render
-                // or the size of the chart has changed
                 width = chartWidth;
                 height = chartHeight;
                 gradient = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
-                gradient.addColorStop(0, 'rgb(255, 00, 00)');
-                gradient.addColorStop(0.5, 'rgb(00, 255, 00)');
-                gradient.addColorStop(1, 'rgb(00, 00, 255)');
+                gradient = amountGraphGradient(gradient, name)
           }
           return gradient;
         }
 
+        function amountGraphGradient(gradient, name) {
+            if(name == 'requirements') {
+                gradient.addColorStop(0, 'rgba(6, 1, 89, 1)');
+                gradient.addColorStop(0.25, 'rgba(46, 46, 159, 1)');
+                gradient.addColorStop(0.7, 'rgba(14, 192, 228, 1)');
+            } else if (name == 'aminoacids') {
+                gradient.addColorStop(0, 'rgba(66, 14, 7, 1)');
+                gradient.addColorStop(0.25, 'rgba(170, 87, 12, 1)');
+                gradient.addColorStop(0.7, 'rgba(238, 176, 90, 1)');
+            }
+            return gradient;
+        }
     });
 </script>
 </body>
