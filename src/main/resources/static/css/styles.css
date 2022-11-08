@@ -32,3 +32,10 @@
             padding-left: 0.6rem;
             width: 100%;
         }
+        .home-icon{
+            font-size: 0.8rem;
+            margin-right: 0rem;
+        }
+        .color-black{
+            color: black;
+        }

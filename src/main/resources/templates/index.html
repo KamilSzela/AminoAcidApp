@@ -15,20 +15,22 @@
     <div class="row mx-4 py-3 bg-dark" >
         <div class="col-sm-9 col-xs-12">
             <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+                <a class="navbar-brand home-icon" href="/"><i class="bi bi-house"></i></a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse align-items-center" id="navbar">
-                    <ul class="navbar-nav mx-2 px-3 w-100 text-center">
+                    <ul class="navbar-nav px-3 w-100 text-center">
                         <li class="nav-item mr-2 text-white menu-item font-weight-bold"><i
                                 class="bi bi-basket"></i><span class="ml-1">Skomponuj
                             posiłek</span></li>
-                        <li class="nav-item mr-2 text-white menu-item font-weight-bold"><i
-                                class="bi bi-list-columns"></i><span class="ml-1">Przegląd składników</span></li>
+                        <li class="nav-item mr-2 text-white menu-item font-weight-bold"><a class="text-white"
+                                th:href="@{/commonIngredients}">
+                            <i class="bi bi-list-columns"></i><span class="ml-1">Przegląd składników</span></a></li>
                         <li class="nav-item mr-2 text-white menu-item font-weight-bold"><i
                                 class="bi bi-folder2-open"></i><span class="ml-1">Zapisane posiłki</span></li>
                         <li class="nav-item mr-2 text-white menu-item font-weight-bold"><i
-                                class="bi bi-graph-up-arrow"></i><span class="ml-1">Statystyka</span></li>
+                                class="bi bi-graph-up-arrow"></i><span class="ml-1">Dane statystyczne</span></li>
                     </ul>
                 </div>
             </nav>
