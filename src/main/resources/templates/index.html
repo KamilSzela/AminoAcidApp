@@ -21,16 +21,30 @@
                 </button>
                 <div class="collapse navbar-collapse align-items-center" id="navbar">
                     <ul class="navbar-nav px-3 w-100 text-center">
-                        <li class="nav-item mr-2 text-white menu-item font-weight-bold"><i
-                                class="bi bi-basket"></i><span class="ml-1">Skomponuj
-                            posiłek</span></li>
-                        <li class="nav-item mr-2 text-white menu-item font-weight-bold"><a class="text-white"
-                                th:href="@{/commonIngredients}">
-                            <i class="bi bi-list-columns"></i><span class="ml-1">Przegląd składników</span></a></li>
-                        <li class="nav-item mr-2 text-white menu-item font-weight-bold"><i
-                                class="bi bi-folder2-open"></i><span class="ml-1">Zapisane posiłki</span></li>
-                        <li class="nav-item mr-2 text-white menu-item font-weight-bold"><i
-                                class="bi bi-graph-up-arrow"></i><span class="ml-1">Dane statystyczne</span></li>
+                        <li class="nav-item text-white menu-item font-weight-bold">
+                            <a class="text-white" th:href="@{/composeMeal}">
+                                <i class="bi bi-basket"></i>
+                                <span class="ml-1">Skomponuj posiłek</span>
+                            </a>
+                        </li>
+                        <li class="nav-item text-white menu-item font-weight-bold">
+                            <a class="text-white" th:href="@{/commonIngredients}">
+                                <i class="bi bi-list-columns"></i>
+                                <span class="ml-1">Przegląd składników</span>
+                            </a>
+                        </li>
+                        <li class="nav-item text-white menu-item font-weight-bold">
+                            <a>
+                                <i class="bi bi-folder2-open"></i>
+                                <span class="ml-1">Zapisane posiłki</span>
+                            </a>
+                        </li>
+                        <li class="nav-item text-white menu-item font-weight-bold">
+                            <a>
+                            <i class="bi bi-graph-up-arrow"></i>
+                            <span class="ml-1">Dane statystyczne</span>
+                            </a>
+                        </li>
                     </ul>
                 </div>
             </nav>
