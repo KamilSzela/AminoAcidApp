@@ -62,21 +62,21 @@
 
     <main>
         <div class="container px-5">
-            <div class="row">
-                <h3> Skomponuj swój posiłek dodając skladniki do listy</h3>
+            <div class="row my-3">
+                <h3 class="text-bold"> Skomponuj swój posiłek dodając składniki do listy</h3>
             </div>
            <div class="row py-2">
-               <div class="col-sm-5 form-group">
+               <div class="col-sm-7 form-group">
                    <div class="row">
-                       <div class="col-sm-4"><label for="ingredientPicker">Wybierz skałdnik z listy</label></div>
-                       <div class="col-sm-8"><select class="form-control form-control-sm" id="ingredientPicker">
+                       <div class="col-sm-5"><label for="ingredientPicker">Wybierz składnik z listy</label></div>
+                       <div class="col-sm-7"><select class="form-control" id="ingredientPicker">
                            <option>1</option>
                            <option>2</option>
                        </select></div>
                    </div>
                </div>
-               <div class="col-sm-5 input-group">
-                   <input type="number" id="massInput" class="form-control" placeholder="Wpisz masę składnika w kg">
+               <div class="col-sm-3 input-group mb-4">
+                   <input type="number" id="massInput" class="form-control" placeholder="Wpisz masę składnika w g">
                    <div class="input-group-append">
                        <span class="input-group-text"> g</span>
                    </div>
@@ -87,7 +87,19 @@
            </div>
             <div class="row">
                 <div class="col-sm-12" id="ingredientList">
-                    list placeholder
+                    <table class="table table-dark- table-small table-hover">
+                        <thead>
+                            <tr>
+                                <th>Lp.</th>
+                                <th>Nazwa składnika</th>
+                                <th>Masa składnika</th>
+                                <th>Usuń składnik</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ingredientTableBody" class="text-center">
+
+                        </tbody>
+                    </table>
                 </div>
             </div>
             <div class="row">
@@ -110,6 +122,62 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
+    $(document).ready(function() {
+        let ingredientData;
+        var lastListRowNumber = 0;
+        attachButtonEvent();
+        prepareList();
+
+        function prepareList() {
+            const response = fetch('/commonIngredients/getAll').then( (response) => {
+                const contentType = response.headers.get('content-type');
+                if(response.ok && contentType.includes('application/json')){
+                    return response.json();
+                }
+            }).then( (json) => {
+                ingredientData = json;
+                $('#ingredientPicker').html(createList(json));
+                console.log(ingredientData);
+            });
+        }
+
+        function createList(json) {
+            let htmlPrepared;
+            json.forEach( option => {
+                htmlPrepared += '<option value="' + option.id + '">' + option.name + '</option>';
+            });
+            return htmlPrepared;
+        }
+
+        function attachButtonEvent() {
+            $('#addToListBtn').click(function() {
+                appendToList();
+            });
+        }
+
+        function appendToList() {
+            var ingredientId = $("select option:selected").val();
+            var mass = $('#massInput').val();
+
+            const regExp = /\D/;
+
+            if(mass == "" || regExp.test(mass)){
+                mass = 0;
+            }
+
+            lastListRowNumber++;
+
+            let rowPrepared = '<tr id="row' + lastListRowNumber + '"> <td>' + lastListRowNumber + '</td>';
+            rowPrepared += '<td>' + ingredientData[ ingredientId - 1 ].name + '</td>';
+            rowPrepared += '<td>' + mass + '</td>';
+            rowPrepared += '<td value="' + lastListRowNumber + '"> Icon' + '</td> </tr>';
+
+            $('#ingredientTableBody').append(rowPrepared);
+        }
+
+    });
+
+
 
 </script>
 </body>
