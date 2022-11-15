@@ -87,7 +87,7 @@
            </div>
             <div class="row">
                 <div class="col-sm-12" id="ingredientList">
-                    <table class="table table-dark- table-small table-hover">
+                    <table class="table table-dark- table-small table-hover text-center">
                         <thead>
                             <tr>
                                 <th>Lp.</th>
@@ -96,7 +96,7 @@
                                 <th>Usuń składnik</th>
                             </tr>
                         </thead>
-                        <tbody id="ingredientTableBody" class="text-center">
+                        <tbody id="ingredientTableBody">
 
                         </tbody>
                     </table>
@@ -124,9 +124,10 @@
 <script>
     $(document).ready(function() {
         let ingredientData;
-        var lastListRowNumber = 0;
         attachButtonEvent();
         prepareList();
+
+        let ingredientShortList = new Array();
 
         function prepareList() {
             const response = fetch('/commonIngredients/getAll').then( (response) => {
@@ -157,7 +158,14 @@
 
         function appendToList() {
             var ingredientId = $("select option:selected").val();
+            var name = $("select option:selected").text();
             var mass = $('#massInput').val();
+            let ingredientToList = {};
+            ingredientToList.id = ingredientId;
+            ingredientToList.name = name;
+            ingredientToList.mass = mass;
+
+            ingredientShortList.push(ingredientToList);
 
             const regExp = /\D/;
 
@@ -165,16 +173,23 @@
                 mass = 0;
             }
 
-            lastListRowNumber++;
-
-            let rowPrepared = '<tr id="row' + lastListRowNumber + '"> <td>' + lastListRowNumber + '</td>';
+            let rowPrepared = '<tr id="row' + ingredientShortList.length + '"> <td>' + ingredientShortList.length + '</td>';
             rowPrepared += '<td>' + ingredientData[ ingredientId - 1 ].name + '</td>';
             rowPrepared += '<td>' + mass + '</td>';
-            rowPrepared += '<td value="' + lastListRowNumber + '"> Icon' + '</td> </tr>';
+            rowPrepared += '<td value="' + ingredientShortList.length + '"> <i class="bi bi-x-circle-fill"></i>' + '</td> </tr>';
 
             $('#ingredientTableBody').append(rowPrepared);
+
+            addDeleteEvent();
         }
 
+        function addDeleteEvent() {
+            $('.bi.bi-x-circle-fill').click(function() {
+                console.log($(this).parent().attr('value'));
+                $(this).parent().parent().remove();
+            });
+            console.log(ingredientShortList);
+        }
     });
 
 
