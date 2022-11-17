@@ -102,8 +102,8 @@
                     </table>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-sm-12" id="summaryContainer">
+            <div class="row" id="summaryContainer">
+                <div class="col-sm-12" >
                     summary placeholder
                 </div>
             </div>
@@ -138,7 +138,6 @@
             }).then( (json) => {
                 ingredientData = json;
                 $('#ingredientPicker').html(createList(json));
-                console.log(ingredientData);
             });
         }
 
@@ -160,12 +159,6 @@
             var ingredientId = $("select option:selected").val();
             var name = $("select option:selected").text();
             var mass = $('#massInput').val();
-            let ingredientToList = {};
-            ingredientToList.id = ingredientId;
-            ingredientToList.name = name;
-            ingredientToList.mass = mass;
-
-            ingredientShortList.push(ingredientToList);
 
             const regExp = /\D/;
 
@@ -173,22 +166,55 @@
                 mass = 0;
             }
 
-            let rowPrepared = '<tr id="row' + ingredientShortList.length + '"> <td>' + ingredientShortList.length + '</td>';
-            rowPrepared += '<td>' + ingredientData[ ingredientId - 1 ].name + '</td>';
-            rowPrepared += '<td>' + mass + '</td>';
-            rowPrepared += '<td value="' + ingredientShortList.length + '"> <i class="bi bi-x-circle-fill"></i>' + '</td> </tr>';
+            let ingredientToList = {};
+            ingredientToList.id = ingredientId;
+            ingredientToList.name = name;
+            ingredientToList.mass = mass;
 
-            $('#ingredientTableBody').append(rowPrepared);
+            ingredientShortList.push(ingredientToList);
+            prepareMealList();
+        }
 
+        function prepareMealList() {
+            $('#ingredientTableBody').html('');
+            ingredientShortList.forEach((element, index) => {
+                let rowPrepared = '<tr> <td>' + (index + 1) + '</td>';
+                rowPrepared += '<td>' + element.name + '</td>';
+                rowPrepared += '<td>' + element.mass + '</td>';
+                rowPrepared += '<td value="' + index + '"> <i class="bi bi-x-circle-fill pointer"></i>' + '</td> </tr>';
+                $('#ingredientTableBody').append(rowPrepared);
+            });
             addDeleteEvent();
+            prepareSummary();
         }
 
         function addDeleteEvent() {
             $('.bi.bi-x-circle-fill').click(function() {
-                console.log($(this).parent().attr('value'));
+                let index = $(this).parent().attr('value');
+                ingredientShortList.splice(index, 1);
                 $(this).parent().parent().remove();
+                prepareMealList();
             });
-            console.log(ingredientShortList);
+        }
+
+        function prepareSummary() {
+            var protein = 0;
+            var carbs = 0;
+            var fat = 0;
+            var energy = 0;
+            ingredientShortList.forEach( element => {
+                let ingredient = ingredientData[element.id -1];
+                let fractionOfStandardMass = element.mass / 100;
+                protein += parseFloat(ingredient.protein * fractionOfStandardMass);
+                carbs += parseFloat(ingredient.carbs * fractionOfStandardMass);
+                fat += parseFloat(ingredient.fat * fractionOfStandardMass);
+                energy += parseFloat(ingredient.energy * fractionOfStandardMass);
+            });
+            var innerHtml = '<div class=\"col-sm-6\"> Zawartość kaloryczna: ' + energy + 'kcal</div>';
+            innerHtml += '<div class=\"col-sm-6\"> Ilość białka: ' + protein + 'g</div>';
+            innerHtml += '<div class=\"col-sm-6\"> Ilość węglowodanów: ' + carbs + 'g</div>';
+            innerHtml += '<div class=\"col-sm-6\"> Ilość tłuszczu: ' + fat + 'g</div>';
+            $('#summaryContainer').html(innerHtml);
         }
     });
 
