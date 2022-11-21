@@ -247,8 +247,10 @@
                 mealAminoAcidContent.lysine += ingredientData[index].lysine * fractionOfStandardMass;
                 mealAminoAcidContent.methionine += ingredientData[index].methionine * fractionOfStandardMass;
                 mealAminoAcidContent.cysteine += ingredientData[index].cysteine * fractionOfStandardMass;
-                mealAminoAcidContent.phenylalaninePlusTyrosine += (ingredientData[index].phenlalanine *
-                fractionOfStandardMass + ingredientData[index].tyrosine * fractionOfStandardMass);
+                mealAminoAcidContent.phenylalaninePlusTyrosine += ingredientData[index].phenylalanine *
+                fractionOfStandardMass;
+                mealAminoAcidContent.phenylalaninePlusTyrosine += ingredientData[index].tyrosine *
+                fractionOfStandardMass;
                 mealAminoAcidContent.threonine += ingredientData[index].threonine * fractionOfStandardMass;
                 mealAminoAcidContent.tryptophan += ingredientData[index].tryptophan * fractionOfStandardMass;
                 mealAminoAcidContent.valine += ingredientData[index].valine * fractionOfStandardMass;
@@ -284,7 +286,7 @@
                             }
                             return getGradient(ctx, chartArea, name);
                       },
-                      data: mealAminoAcidContent,
+                      data: Object.values(mealAminoAcidContent),
                     },
                 ]
               };
