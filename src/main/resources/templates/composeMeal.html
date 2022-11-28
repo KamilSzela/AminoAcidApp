@@ -13,7 +13,7 @@
     <a class="d-none" href="http://www.freepik.com">Background designed by starline / Freepik</a>
 
     <div class="row mx-4 py-3 bg-dark" >
-        <div class="col-sm-9 col-xs-12">
+        <div class="col-lg-9 col-md-12">
             <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
                 <a class="navbar-brand home-icon" href="/"><i class="bi bi-house"></i></a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar">
@@ -49,11 +49,11 @@
                 </div>
             </nav>
         </div>
-        <div class="col-sm-3 text-right d-none d-md-inline">
+        <div class="col-lg-3 text-right d-none d-lg-inline">
             <button class="btn btn-primary">Zaloguj się</button>
             <button class="btn btn-primary">Zarejestruj się</button>
         </div>
-        <div class="col-xs-12 w-100 mx-2 d-block d-md-none">
+        <div class="col-xs-12 w-100 mx-2 d-block d-lg-none">
             <button class="btn btn-primary w-100 mb-2">Zaloguj się</button>
             <button class="btn btn-primary w-100 ">Zarejestruj się</button>
         </div>
@@ -62,27 +62,27 @@
 
     <main>
         <div class="container px-5">
-            <div class="row my-3">
+            <div class="row my-3 text-center">
                 <h3 class="text-bold"> Skomponuj swój posiłek dodając składniki do listy</h3>
             </div>
            <div class="row py-2">
-               <div class="col-sm-6 form-group">
+               <div class="col-lg-5 col-sm-12 form-group">
                    <div class="row">
-                       <div class="col-sm-5"><label for="ingredientPicker">Wybierz składnik z listy</label></div>
-                       <div class="col-sm-7"><select class="form-control" id="ingredientPicker">
+                       <div class="col-sm-6"><label for="ingredientPicker">Wybierz składnik z listy</label></div>
+                       <div class="col-sm-6"><select class="form-control" id="ingredientPicker">
                            <option>1</option>
                            <option>2</option>
                        </select></div>
                    </div>
                </div>
-               <div class="col-sm-4 input-group mb-4">
+               <div class="col-lg-4 col-sm-12 input-group mb-4">
                    <input type="number" id="massInput" class="form-control" placeholder="Wpisz masę składnika w g">
                    <div class="input-group-append">
                        <span class="input-group-text"> g</span>
                    </div>
                </div>
-               <div class="col-sm-2">
-                   <button class="btn btn-success" id="addToListBtn">Dodaj składnik do listy</button>
+               <div class="col-lg-3 col-sm-12">
+                   <button class="btn btn-success w-100" id="addToListBtn">Dodaj składnik do listy</button>
                </div>
            </div>
             <div class="row">
@@ -102,15 +102,35 @@
                     </table>
                 </div>
             </div>
-            <div class="row" id="summaryContainer">
-                <div class="col-sm-12 text-center" >
-                    summary placeholder
+            <div class="row text-center my-1" id="summaryContainer">
+                <div class="col-sm-12"><h4> Podsumowanie wartości odżywczych posiłku: </h4> </div>
+                <div class="col-sm-12 text-center">
+
+                </div>
+            </div>
+            <div class="row  align-items-center text-center my-2">
+                <div class="col-md-8 col-sm-12">
+                    <a role="button" data-toggle="popover" data-trigger="focus"
+                       title="Zapotrzebowanie na poszczególne aminokwasy wg. WHO/FAO/UNU(2007) [mg/kg masy ciała]:"
+                       data-content="Histydyna: 10, Izoleucyna: 20,
+                                        Leucyna: 39, Metionina: 10, Cysteina: 4,
+                                        Fenyloalanina + Tyrozyna: 25, Treonina: 15,
+                                        Tryptofan: 4, Walina: 26, Lizyna: 30"
+                       class="btn popover-dismiss color-black" tabindex="0">
+                        <span><i class="bi bi-info-circle"></i></span>
+                    </a>
+                    <label for="bodyWeightInput" class="mx-1 mb-0">
+                        Wpisz swoją masę do obliczeń zapotrzebowania:
+                    </label>
+                </div>
+                <div class="col-md-4 col-sm-12 input-group">
+                    <input type="number" id="bodyWeightInput" class="form-control" placeholder="Wpisz masę w kg">
+                    <div class="input-group-append">
+                        <span class="input-group-text"> kg</span>
+                    </div>
                 </div>
             </div>
             <div class="row">
-                <div class="col-sm-12">
-                    <input type="number" text="Wprowadź swoją masę:">
-                </div>
                 <div class="col-sm-12" id="chartContainer">
                     chart placeholder
                 </div>
@@ -123,12 +143,26 @@
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+		jQuery(function () {
+			jQuery('[data-toggle="popover"]').popover()
+		});
 
+		$('.popover-dismiss').popover({
+		  trigger: 'focus'
+		})
+</script>
 <script>
     $(document).ready(function() {
         let ingredientData;
-        attachButtonEvent();
-        prepareList();
+        var requirements;
+        const requirementResponse = fetch('/requirements').then( (response) => {
+            return response.json();
+        }).then( (json) => {
+            requirements = json;
+            attachButtonEvent();
+            prepareList();
+        });
 
         let ingredientShortList = new Array();
 
@@ -141,6 +175,9 @@
             }).then( (json) => {
                 ingredientData = json;
                 $('#ingredientPicker').html(createList(json));
+                $('#bodyWeightInput').change(function() {
+                    prepareChart();
+                });
             });
         }
 
@@ -183,11 +220,12 @@
             ingredientShortList.forEach((element, index) => {
                 let rowPrepared = '<tr> <td>' + (index + 1) + '</td>';
                 rowPrepared += '<td>' + element.name + '</td>';
-                rowPrepared += '<td>' + element.mass + '</td>';
-                rowPrepared += '<td value="' + index + '"> <i class="bi bi-x-circle-fill pointer"></i>' + '</td> </tr>';
+                rowPrepared += '<td value="' + index + '">' + element.mass + 'g <i class="bi bi-pencil"></i></td>';
+                rowPrepared += '<td value="' + index + '"> <i class="bi bi-x-circle-fill pointer"></i></td> </tr>';
                 $('#ingredientTableBody').append(rowPrepared);
             });
             addDeleteEvent();
+            addChangeMassEvent();
             prepareSummary();
             prepareChart();
         }
@@ -197,6 +235,17 @@
                 let index = $(this).parent().attr('value');
                 ingredientShortList.splice(index, 1);
                 $(this).parent().parent().remove();
+                prepareMealList();
+            });
+        }
+
+        function addChangeMassEvent() {
+            $('.bi.bi-pencil').click(function() {
+                let index = $(this).parent().attr('value');
+                let massChange = prompt("Wprowadź zmienioną masę:");
+                if(massChange != null && massChange != ""){
+                    ingredientShortList[index].mass = massChange;
+                }
                 prepareMealList();
             });
         }
@@ -224,6 +273,27 @@
         function prepareChart() {
             $('canvas#chart').remove();
             $('#chartContainer').append('<canvas id="chart"></canvas>');
+            let mass = $('#bodyWeightInput').val();
+            const regExp = /\D/;
+
+            if(mass == "" || regExp.test(mass)){
+                mass = 70;
+            }
+
+            let requirementsChartLabel = "Zapotrzebowanie dla " + mass + " kg dorosłego";
+
+            let requirementsCalculated = [
+                requirements.isoleucine * mass,
+                requirements.leucine * mass,
+                requirements.lysine * mass,
+                requirements.methionine * mass,
+                requirements.cysteine * mass,
+                requirements.phenylalanine_plus_tyrosine * mass,
+                requirements.threonine * mass,
+                requirements.tryptophan * mass,
+                requirements.valine * mass,
+                requirements.histidine * mass
+            ];
 
             let mealAminoAcidContent = {
                 isoleucine: 0,
@@ -288,6 +358,19 @@
                       },
                       data: Object.values(mealAminoAcidContent),
                     },
+                    {
+                        label: requirementsChartLabel,
+                        data: requirementsCalculated,
+                        backgroundColor: function(context){
+                         const chart = context.chart;
+                         const {ctx, chartArea} = chart;
+                         const name = "requirements";
+                             if (!chartArea) {
+                              return;
+                            }
+                            return getGradient(ctx, chartArea, name);
+                      },
+                    }
                 ]
               };
 
