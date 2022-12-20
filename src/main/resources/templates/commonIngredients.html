@@ -12,54 +12,8 @@
 <div class="container custom-background">
     <a class="d-none" href="http://www.freepik.com">Background designed by starline / Freepik</a>
 
-    <div class="row mx-4 py-3 bg-dark" >
-        <div class="col-md-9 col-s-12">
-            <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-                <a class="navbar-brand home-icon" href="/"><i class="bi bi-house"></i></a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse align-items-center" id="navbar">
-                    <ul class="navbar-nav px-3 w-100 text-center">
-                        <li class="nav-item text-white menu-item font-weight-bold">
-                            <a class="text-white" th:href="@{/composeMeal}">
-                                <i class="bi bi-basket"></i>
-                                <span class="ml-1">Skomponuj posiłek</span>
-                            </a>
-                        </li>
-                        <li class="nav-item text-white menu-item font-weight-bold">
-                            <a th:href="@{/commonIngredients}" class="text-white">
-                                <i class="bi bi-list-columns"></i>
-                                <span class="ml-1">Przegląd składników</span>
-                            </a>
-                        </li>
-                        <li class="nav-item text-white menu-item font-weight-bold">
-                            <a>
-                                <i class="bi bi-folder2-open"></i>
-                                <span class="ml-1">Zapisane posiłki</span>
-                            </a>
-                        </li>
-                        <li class="nav-item text-white menu-item font-weight-bold">
-                            <a>
-                                <i class="bi bi-graph-up-arrow"></i>
-                                <span class="ml-1">Dane statystyczne</span>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </nav>
-        </div>
-        <div class="col-md-3 text-right d-none d-md-inline">
-            <button class="btn btn-primary">Zaloguj się</button>
-            <button class="btn btn-primary">Zarejestruj się</button>
-        </div>
-        <div class="col-s-12 w-100 mx-2 d-block d-md-none">
-            <button class="btn btn-primary w-100 mb-2">Zaloguj się</button>
-            <button class="btn btn-primary w-100 ">Zarejestruj się</button>
-        </div>
-    </div>
-
-
+    <div class="row mx-4 py-3 bg-dark" th:include="navbar :: navbar-copy"></div>
+    
     <main>
         <div class="container px-5">
             <div class="row">
