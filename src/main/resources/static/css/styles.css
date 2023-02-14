@@ -11,7 +11,7 @@
             opacity: 0;
             transition: opacity 0.5s ease-in-out;
             color: black;
-            pointer: hand;
+            cursor: pointer;
         }
         .caption-big{
             width: 89% !important;
@@ -38,4 +38,12 @@
         }
         .color-black{
             color: black;
+        }
+        .pointer{
+            transition: ease-in-out 0.2s scale;
+        }
+        .pointer:hover{
+            cursor: pointer;
+            color: red;
+            transform: scale(1.2);
         }

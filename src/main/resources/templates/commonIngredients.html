@@ -12,40 +12,8 @@
 <div class="container custom-background">
     <a class="d-none" href="http://www.freepik.com">Background designed by starline / Freepik</a>
 
-    <div class="row mx-4 py-3 bg-dark" >
-        <div class="col-sm-9 col-xs-12">
-            <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-                <a class="navbar-brand home-icon" href="/"><i class="bi bi-house"></i></a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse align-items-center" id="navbar">
-                    <ul class="navbar-nav px-3 w-100 text-center">
-                        <li class="nav-item mr-2 text-white menu-item font-weight-bold"><i
-                                class="bi bi-basket"></i><span class="ml-1">Skomponuj
-                            posiłek</span></li>
-                        <li class="nav-item mr-2 text-white menu-item font-weight-bold"><a
-                                th:href="@{/commonIngredients}" class="text-white">
-                            <i class="bi bi-list-columns"></i><span class="ml-1">Przegląd składników</span></a></li>
-                        <li class="nav-item mr-2 text-white menu-item font-weight-bold"><i
-                                class="bi bi-folder2-open"></i><span class="ml-1">Zapisane posiłki</span></li>
-                        <li class="nav-item mr-2 text-white menu-item font-weight-bold"><i
-                                class="bi bi-graph-up-arrow"></i><span class="ml-1">Dane statystyczne</span></li>
-                    </ul>
-                </div>
-            </nav>
-        </div>
-        <div class="col-sm-3 text-right d-none d-md-inline">
-            <button class="btn btn-primary">Zaloguj się</button>
-            <button class="btn btn-primary">Zarejestruj się</button>
-        </div>
-        <div class="col-xs-12 w-100 mx-2 d-block d-md-none">
-            <button class="btn btn-primary w-100 mb-2">Zaloguj się</button>
-            <button class="btn btn-primary w-100 ">Zarejestruj się</button>
-        </div>
-    </div>
-
-
+    <div class="row mx-4 py-3 bg-dark" th:include="navbar :: navbar-copy"></div>
+    
     <main>
         <div class="container px-5">
             <div class="row">
@@ -58,37 +26,41 @@
                 </div>
                 <div class="col-sm-12" >
                     <div class="row text-center py-3" >
-                        <div class="col-sm-12" >
+                        <div class="col-sm-1" >
                             <a role="button" data-toggle="popover" data-trigger="focus"
                                data-content="Zawartość aminokwasów dla poszczególnych składników jest skorygowana o przyswajalność,
                                czyli o procent w jakim dane białko jest wchłaniane z przewodu pokarmowego."
                                class="btn popover-dismiss color-black" tabindex="0">
-                                <h3><i class="bi bi-info-circle"></i> Podsumowanie dla 100g wybranego składnika</h3>
-                            </a>
+                                <i class="bi bi-info-circle"></i></a>
                         </div>
+                        <div class="col-sm-11">
+                            <h3>Podsumowanie dla 100g wybranego składnika</h3>
+                        </div>
+                    </div>
+                    <div class="row text-center py-3">
                         <div class="col-sm-12" >
                             <div class="row" id="summaryContainer"></div>
                         </div>
                     </div>
                 </div>
-                <div class="col-sm-12 ">
-                    <div class="row  align-items-center">
-                        <div class="col-sm-8">
-                                <a role="button" data-toggle="popover" data-trigger="focus"
-                                   title="Zapotrzebowanie na poszczególne aminokwasy wg. WHO/FAO/UNU(2007) [mg/kg masy ciała]:"
-                                        data-content="Histydyna: 10, Izoleucyna: 20,
-                                            Leucyna: 39, Metionina: 10, Cysteina: 4,
-                                            Fenyloalanina + Tyrozyna: 25, Treonina: 15,
-                                            Tryptofan: 4, Walina: 26, Lizyna: 30"
-                                   class="btn popover-dismiss color-black" tabindex="0">
-                                    <span><i class="bi bi-info-circle"></i></span>
-                                </a>
-                            <label for="massInput" class="mx-1 mb-0">
+                <div class="col-sm-12">
+                    <div class="row align-items-center text-center">
+                        <div class="col-md-8 col-sm-12">
+                            <a role="button" data-toggle="popover" data-trigger="focus"
+                               title="Zapotrzebowanie na poszczególne aminokwasy wg. WHO/FAO/UNU(2007) [mg/kg masy ciała]:"
+                                    data-content="Histydyna: 10, Izoleucyna: 20,
+                                        Leucyna: 39, Metionina: 10, Cysteina: 4,
+                                        Fenyloalanina + Tyrozyna: 25, Treonina: 15,
+                                        Tryptofan: 4, Walina: 26, Lizyna: 30"
+                               class="btn popover-dismiss color-black" tabindex="0">
+                                <span><i class="bi bi-info-circle"></i></span>
+                            </a>
+                            <label for="bodyWeightInput" class="mx-1 mb-0">
                                 Wpisz swoją masę do obliczeń zapotrzebowania:
                             </label>
                         </div>
-                        <div class="col-sm-4 input-group">
-                            <input type="number" id="massInput" class="form-control" placeholder="Wpisz masę w kg">
+                        <div class="col-md-4 col-sm-12 input-group">
+                            <input type="number" id="bodyWeightInput" class="form-control" placeholder="Wpisz masę w kg">
                             <div class="input-group-append">
                                 <span class="input-group-text"> kg</span>
                             </div>
@@ -96,10 +68,13 @@
                     </div>
                 </div>
             </div>
-            <div class="row justify-content-center">
+            <div class="row justify-content-center d-none d-md-flex">
                 <div class="col-xs-12 col-sm-9" id="chartContainer">
                     <canvas id="chart"></canvas>
                 </div>
+            </div>
+            <div class="row justify-content-center d-flex my-3 text-center">
+                <table class="table table-dark table-striped" id="aminoAcidsTab"></table>
             </div>
         </div>
     </main>
@@ -141,7 +116,7 @@
                 $('#ingredientPicker').change(function() {
                     refreshSite(json);
                 });
-                $('#massInput').change(function() {
+                $('#bodyWeightInput').change(function() {
                     refreshSite(json);
                 });
             });
@@ -158,13 +133,14 @@
             innerHtml += '<div class=\"col-sm-6\"> Ilość białka: ' + ingredient.protein + 'g</div>';
             innerHtml += '<div class=\"col-sm-6\"> Ilość węglowodanów: ' + ingredient.carbs + 'g</div>';
             innerHtml += '<div class=\"col-sm-6\"> Ilość tłuszczu: ' + ingredient.fat + 'g</div>';
+            innerHtml += '<div class=\"col-sm-12\"> Przyswajalność białka: ' + ingredient.digestability * 100 + '%</div>';
             $('#summaryContainer').html(innerHtml);
         }
 
         function prepareChart(ingredient) {
             $('canvas#chart').remove();
             $('#chartContainer').append('<canvas id="chart"></canvas>');
-            let mass = $('#massInput').val();
+            let mass = $('#bodyWeightInput').val();
             const regExp = /\D/;
 
             if(mass == "" || regExp.test(mass)){
@@ -213,6 +189,8 @@
                 'Walina',
                 'Histydyna'
               ];
+
+              prepareAminoAcidsTable(labels, requirementsCalculated, digestibilityCorrectedAminoAcidsAmount);
 
               const data = {
                 labels: labels,
@@ -293,6 +271,23 @@
             }
             return gradient;
         }
+
+        function prepareAminoAcidsTable(labels, requirements, aminoAcidAmountData) {
+            let innerHtml = '<thead><tr>\
+            <th scope=\"col\">Nazwa</th>\
+            <th scope=\"col\">Ilość [mg]</th>\
+            <th scope=\"col\">Zapotrzebowanie</th>\
+            </tr></thead><tbody>';
+
+            for (let i = 0; i <= labels.length - 1; i++) {
+                innerHtml += '<tr><td>' + labels[i] + '</td>';
+                innerHtml += '<td>' + aminoAcidAmountData[i] + '</td>';
+                innerHtml += '<td>' + requirements[i] + '</td></tr>';
+            }
+
+            innerHtml += '</tbody>';
+            $('#aminoAcidsTab').html(innerHtml);
+        };
     });
 </script>
 </body>
