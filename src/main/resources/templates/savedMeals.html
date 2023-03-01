@@ -31,21 +31,21 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text">Wpisz daty od do</span>
                             </div>
-                            <input type="date" class="form-control">
-                            <input type="date" class="form-control">
+                            <input type="date" class="form-control" id="beginDate">
+                            <input type="date" class="form-control" id="endDate">
                         </div>
                         <div class="col-sm-6 input-group">
                             <div class="input-group-prepend">
                                 <span class="input-group-text">Wpisz kaloryczność od do</span>
                             </div>
-                            <input type="number" class="form-control">
-                            <input type="number" class="form-control">
+                            <input type="number" class="form-control" id="bottomCaloricity">
+                            <input type="number" class="form-control" id="topCaloricity">
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="row" id="mealSummary">
-                <div class="col-sm-12">Placeholder - meal list</div>
+            <div class="row" >
+                <div class="col-sm-12" id="mealSummary">Placeholder - meal list</div>
             </div>
         </div>
     </main>
@@ -64,6 +64,104 @@
 		  trigger: 'focus'
 		})
 </script>
+<script>
+    $(document).ready(function() {
+        //constructors
+        function Meal(userId, ingredientList, date, caloricity) {
+            this.userId = userId;
+            this.ingredientList = ingredientList;
+            this.date = date;
+            this.caloricity = caloricity;
+        }
+        function Food(name, weight) {
+            this.name = name;
+            this.weight = weight;
+        }
+        //sample data
+        var list1 = [new Food("Sezam", 50), new Food("Kukurydza", 100), new Food("Soja", 25)];
+        var meal1 = new Meal(1, list1, new Date("2023-02-28"), 763);
 
+        var list2 = [new Food("Ryż brązowy", 100), new Food("Soczewica", 50), new Food("Orzech laskowy", 75)];
+        var meal2 = new Meal(1, list2, new Date("2023-03-15"), 1015);
+
+        var mealsList = [meal1, meal2];
+        var ingredientsDetailData;
+        getDataFromDb();
+
+        function getDataFromDb() {
+            if(sessionStorage.getItem("ingredientData") == null) {
+                const response = fetch('/commonIngredients/getAll').then( (response) => {
+                    const contentType = response.headers.get('content-type');
+                    if(response.ok && contentType.includes('application/json')){
+                        return response.json();
+                    }
+                }).then( (json) => {
+                    sessionStorage.setItem("ingredientData", JSON.stringify(json));
+                    ingredientsDetailData = json;
+                });
+            } else {
+                ingredientsDetailData = JSON.parse(sessionStorage.getItem("ingredientData"));
+            }
+            prepareMealList(meal1, beginDate = "", endDate = "", lowCalorie = 0, highCalorie = 10000);
+        }
+
+        $('input[type=date], input[type=number]').change(function() {
+            let beginDate = new Date($('#beginDate').val());
+            let endDate = new Date($('#endDate').val());
+            let bottomCaloricity = $('#bottomCaloricity').val();
+            let topCaloricity = $('#topCaloricity').val();
+
+            let mealListAfterFiltering = [];
+            mealsList.forEach(meal => {
+                if(meal.date > beginDate && meal.date < endDate) {
+                    if(meal.caloricity > bottomCaloricity && meal.caloricity < topCaloricity) {
+                        mealListAfterFiltering.push(meal);
+                    }
+                }
+            });
+            console.log(mealListAfterFiltering);
+        });
+
+        function prepareMealList(meal) {
+            let carbs = 0;
+            let fat = 0;
+            let protein = 0;
+            let energy = 0;
+            let content = '<div class=\"row\">';
+
+            meal.ingredientList.forEach(food => {
+                let data = getFoodData(food.name);
+                let fractureOfOneHundred = food.weight / 100;
+                carbs += data.carbs * fractureOfOneHundred;
+                fat += data.fat * fractureOfOneHundred;
+                protein += data.protein * fractureOfOneHundred;
+                energy += data.energy * fractureOfOneHundred;
+                content += '<div class\"col-sm-12\">Składnik: ' + food.name + ', masa:' + food.weight + 'g</div>';
+            });
+
+            content += '<div class=\"col-sm-12\">';
+            content += '<div class=\"row\"><div class=\"col-sm-6\">Meal Carbs: ' + carbs + '</div>';
+            content += '<div class=\"col-sm-6\">Meal Protein: ' + protein + '</div>';
+            content += '<div class=\"col-sm-6\">Meal Fat: ' + fat + '</div>';
+            content += '<div class=\"col-sm-6\">Meal Energy: ' + energy + '</div>';
+            content += '</div></div>';
+            content += '</div>';
+            $('#mealSummary').html(content);
+        };
+
+        function getFoodData(foodName) {
+            var detailData;
+            ingredientsDetailData.forEach(food => {
+                if(food.name == foodName) {
+                    //console.log(food);
+                    detailData = food;
+                    return;
+                }
+            })
+            return detailData;
+        }
+    });
+
+</script>
 </body>
 </html>

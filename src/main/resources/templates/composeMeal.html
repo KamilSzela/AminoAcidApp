@@ -109,7 +109,7 @@
 </script>
 <script>
     $(document).ready(function() {
-        let ingredientData;
+        var ingredientData;
         var requirements;
         const requirementResponse = fetch('/requirements').then( (response) => {
             return response.json();
@@ -122,19 +122,24 @@
         let ingredientShortList = new Array();
 
         function prepareList() {
-            const response = fetch('/commonIngredients/getAll').then( (response) => {
-                const contentType = response.headers.get('content-type');
-                if(response.ok && contentType.includes('application/json')){
-                    return response.json();
-                }
-            }).then( (json) => {
-                ingredientData = json;
-                $('#ingredientPicker').html(createList(json));
-                $('#bodyWeightInput').change(function() {
-                    prepareChart();
+            if(sessionStorage.getItem("ingredientData") == null) {
+                const response = fetch('/commonIngredients/getAll').then( (response) => {
+                    const contentType = response.headers.get('content-type');
+                    if(response.ok && contentType.includes('application/json')){
+                        return response.json();
+                    }
+                }).then( (json) => {
+                    ingredientData = json;
+                    sessionStorage.setItem("ingredientData", JSON.stringify(json));
                 });
-                prepareChart()
+            } else {
+                ingredientData = JSON.parse(sessionStorage.getItem("ingredientData"));
+            }
+            $('#ingredientPicker').html(createList(ingredientData));
+            $('#bodyWeightInput').change(function() {
+                prepareChart();
             });
+            prepareChart()
         }
 
         function createList(json) {
@@ -282,8 +287,6 @@
                 mealAminoAcidContent.valine += ingredientData[index].valine * fractionOfStandardMass;
                 mealAminoAcidContent.histidine += ingredientData[index].histidine * fractionOfStandardMass;
             });
-
-            console.log(mealAminoAcidContent);
 
              const labels = [
                 'Izoleucyna',
