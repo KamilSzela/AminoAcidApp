@@ -44,6 +44,11 @@
                     </div>
                 </div>
             </div>
+            <div class="row align-items-center">
+                <div class="col-sm-4 mx-auto my-3">
+                    <button class="btn btn-success w-100" id="listButton">Wypisz listę posiłków</button>
+                </div>
+            </div>
             <div class="row" >
                 <div class="col-sm-12" id="mealSummary">Placeholder - meal list</div>
             </div>
@@ -67,7 +72,8 @@
 <script>
     $(document).ready(function() {
         //constructors
-        function Meal(userId, ingredientList, date, caloricity) {
+        function Meal(id, userId, ingredientList, date, caloricity) {
+            this.id = id;
             this.userId = userId;
             this.ingredientList = ingredientList;
             this.date = date;
@@ -79,10 +85,10 @@
         }
         //sample data
         var list1 = [new Food("Sezam", 50), new Food("Kukurydza", 100), new Food("Soja", 25)];
-        var meal1 = new Meal(1, list1, new Date("2023-02-28"), 763);
+        var meal1 = new Meal(1, 1, list1, new Date("2023-02-28"), 763);
 
         var list2 = [new Food("Ryż brązowy", 100), new Food("Soczewica", 50), new Food("Orzech laskowy", 75)];
-        var meal2 = new Meal(1, list2, new Date("2023-03-15"), 1015);
+        var meal2 = new Meal(2, 1, list2, new Date("2023-03-15"), 1015);
 
         var mealsList = [meal1, meal2];
         var ingredientsDetailData;
@@ -102,32 +108,38 @@
             } else {
                 ingredientsDetailData = JSON.parse(sessionStorage.getItem("ingredientData"));
             }
-            prepareMealList(meal1, beginDate = "", endDate = "", lowCalorie = 0, highCalorie = 10000);
+
         }
 
-        $('input[type=date], input[type=number]').change(function() {
-            let beginDate = new Date($('#beginDate').val());
-            let endDate = new Date($('#endDate').val());
-            let bottomCaloricity = $('#bottomCaloricity').val();
-            let topCaloricity = $('#topCaloricity').val();
+        $('#listButton').click(function() {
+            let beginDatePassedValue = $('#beginDate').val() ? "" : "1970-01-01";
+            let endDatePassedValue = $('#endDate').val() ? "" : "2050-01-01";
+            let beginDate = new Date(beginDatePassedValue);
+            let endDate = new Date(endDatePassedValue);
+            let bottomCaloricity = $('#bottomCaloricity').val() ? "" : 0;
+            let topCaloricity = $('#topCaloricity').val() ? "" : 10000;
 
-            let mealListAfterFiltering = [];
+            prepareMealList(beginDate, endDate, bottomCaloricity, topCaloricity);
+        });
+
+        function prepareMealList(beginDate = new Date(), endDate = new Date(), lowCalorie = 0, highCalorie = 10000) {
+
             mealsList.forEach(meal => {
                 if(meal.date > beginDate && meal.date < endDate) {
-                    if(meal.caloricity > bottomCaloricity && meal.caloricity < topCaloricity) {
-                        mealListAfterFiltering.push(meal);
+                    if(meal.caloricity > lowCalorie && meal.caloricity < highCalorie) {
+                        prepareIngredientsListOfMeal(meal);
                     }
                 }
             });
-            console.log(mealListAfterFiltering);
-        });
+        }
 
-        function prepareMealList(meal) {
+        function prepareIngredientsListOfMeal(meal) {
             let carbs = 0;
             let fat = 0;
             let protein = 0;
             let energy = 0;
             let content = '<div class=\"row\">';
+            content += '<div class=\"col-sm-12 my-2\">Posiłek zapisany z numerem: ' + meal.id + '</div>';
 
             meal.ingredientList.forEach(food => {
                 let data = getFoodData(food.name);
@@ -146,7 +158,7 @@
             content += '<div class=\"col-sm-6\">Meal Energy: ' + energy + '</div>';
             content += '</div></div>';
             content += '</div>';
-            $('#mealSummary').html(content);
+            $(content).appendTo('#mealSummary');
         };
 
         function getFoodData(foodName) {
