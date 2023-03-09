@@ -112,18 +112,18 @@
         }
 
         $('#listButton').click(function() {
-            let beginDatePassedValue = $('#beginDate').val() ? "" : "1970-01-01";
-            let endDatePassedValue = $('#endDate').val() ? "" : "2050-01-01";
+            let beginDatePassedValue = $('#beginDate').val() == "" ? "1970-01-01" : $('#beginDate').val();
+            let endDatePassedValue = $('#endDate').val() == "" ? "2050-01-01" : $('#endDate').val();
             let beginDate = new Date(beginDatePassedValue);
             let endDate = new Date(endDatePassedValue);
-            let bottomCaloricity = $('#bottomCaloricity').val() ? "" : 0;
-            let topCaloricity = $('#topCaloricity').val() ? "" : 10000;
+            let bottomCaloricity = $('#bottomCaloricity').val() == "" ? 0 : $('#bottomCaloricity').val();
+            let topCaloricity = $('#topCaloricity').val() == "" ? 10000 : $('#topCaloricity').val();
 
             prepareMealList(beginDate, endDate, bottomCaloricity, topCaloricity);
         });
 
         function prepareMealList(beginDate = new Date(), endDate = new Date(), lowCalorie = 0, highCalorie = 10000) {
-
+            $('#mealSummary').html("");
             mealsList.forEach(meal => {
                 if(meal.date > beginDate && meal.date < endDate) {
                     if(meal.caloricity > lowCalorie && meal.caloricity < highCalorie) {
@@ -131,6 +131,7 @@
                     }
                 }
             });
+            addEventForIcon();
         }
 
         function prepareIngredientsListOfMeal(meal) {
@@ -148,7 +149,7 @@
                 fat += data.fat * fractureOfOneHundred;
                 protein += data.protein * fractureOfOneHundred;
                 energy += data.energy * fractureOfOneHundred;
-                content += '<div class\"col-sm-12\">Składnik: ' + food.name + ', masa:' + food.weight + 'g</div>';
+                content += '<div class=\"col-sm-12\">Składnik: ' + food.name + ', masa: ' + food.weight + 'g</div>';
             });
 
             content += '<div class=\"col-sm-12\">';
@@ -157,8 +158,11 @@
             content += '<div class=\"col-sm-6\">Meal Fat: ' + fat + '</div>';
             content += '<div class=\"col-sm-6\">Meal Energy: ' + energy + '</div>';
             content += '</div></div>';
+            content += '<div class=\"col-sm-12\" data-purpose=\"table\" id=' + meal.id + '><i class="bi bi-graph-up-arrow"></i></div>';
             content += '</div>';
+
             $(content).appendTo('#mealSummary');
+
         };
 
         function getFoodData(foodName) {
@@ -172,6 +176,13 @@
             })
             return detailData;
         }
+
+        function addEventForIcon() {
+            $('div[data-purpose="table"]').click(function() {
+                alert("table preparing");
+            });
+        }
+
     });
 
 </script>
