@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AminoAcidsApp</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
+</head>
+<body>
+<div class="container custom-background">
+    <a class="d-none" href="http://www.freepik.com">Background designed by starline / Freepik</a>
+
+    <div class="row mx-4 py-3 bg-dark" th:include="navbar :: navbar-copy"></div>
+
+    <main>
+        <div class="container px-5">
+            <div class="row">
+                <div class="col-sm-12">
+                    <h2>Lista zapisanych posiłków</h2>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <h4>Filtry:</h4>
+                </div>
+                <div class="col-sm-12">
+                    <div class="row">
+                        <div class="col-sm-6 input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">Wpisz daty od do</span>
+                            </div>
+                            <input type="date" class="form-control" id="beginDate">
+                            <input type="date" class="form-control" id="endDate">
+                        </div>
+                        <div class="col-sm-6 input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">Wpisz kaloryczność od do</span>
+                            </div>
+                            <input type="number" class="form-control" id="bottomCaloricity">
+                            <input type="number" class="form-control" id="topCaloricity">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row align-items-center">
+                <div class="col-sm-4 mx-auto my-3">
+                    <button class="btn btn-success w-100" id="listButton">Wypisz listę posiłków</button>
+                </div>
+            </div>
+            <div class="row" >
+                <div class="col-sm-12" id="mealSummary">Placeholder - meal list</div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+		jQuery(function () {
+			jQuery('[data-toggle="popover"]').popover()
+		});
+
+		$('.popover-dismiss').popover({
+		  trigger: 'focus'
+		})
+		$('.collapse').collapse();
+</script>
+<script>
+    $(document).ready(function() {
+        //constructors
+        function Meal(id, userId, ingredientList, date, caloricity) {
+            this.id = id;
+            this.userId = userId;
+            this.ingredientList = ingredientList;
+            this.date = date;
+            this.caloricity = caloricity;
+        }
+        function Food(name, weight) {
+            this.name = name;
+            this.weight = weight;
+        }
+        //sample data
+        var list1 = [new Food("Sezam", 50), new Food("Kukurydza", 100), new Food("Soja", 25)];
+        var meal1 = new Meal(1, 1, list1, new Date("2023-02-28"), 763);
+
+        var list2 = [new Food("Ryż brązowy", 100), new Food("Soczewica", 50), new Food("Orzech laskowy", 75)];
+        var meal2 = new Meal(2, 1, list2, new Date("2023-03-15"), 1015);
+
+        var mealsList = [meal1, meal2];
+        var ingredientsDetailData;
+        getDataFromDb();
+
+        function getDataFromDb() {
+            if(sessionStorage.getItem("ingredientData") == null) {
+                const response = fetch('/commonIngredients/getAll').then( (response) => {
+                    const contentType = response.headers.get('content-type');
+                    if(response.ok && contentType.includes('application/json')){
+                        return response.json();
+                    }
+                }).then( (json) => {
+                    sessionStorage.setItem("ingredientData", JSON.stringify(json));
+                    ingredientsDetailData = json;
+                });
+            } else {
+                ingredientsDetailData = JSON.parse(sessionStorage.getItem("ingredientData"));
+            }
+
+        }
+
+        $('#listButton').click(function() {
+            let beginDatePassedValue = $('#beginDate').val() == "" ? "1970-01-01" : $('#beginDate').val();
+            let endDatePassedValue = $('#endDate').val() == "" ? "2050-01-01" : $('#endDate').val();
+            let beginDate = new Date(beginDatePassedValue);
+            let endDate = new Date(endDatePassedValue);
+            let bottomCaloricity = $('#bottomCaloricity').val() == "" ? 0 : $('#bottomCaloricity').val();
+            let topCaloricity = $('#topCaloricity').val() == "" ? 10000 : $('#topCaloricity').val();
+
+            prepareMealList(beginDate, endDate, bottomCaloricity, topCaloricity);
+        });
+
+        function prepareMealList(beginDate = new Date(), endDate = new Date(), lowCalorie = 0, highCalorie = 10000) {
+            $('#mealSummary').html("");
+            mealsList.forEach(meal => {
+                if(meal.date > beginDate && meal.date < endDate) {
+                    if(meal.caloricity > lowCalorie && meal.caloricity < highCalorie) {
+                        prepareIngredientsListOfMeal(meal);
+                    }
+                }
+            });
+            addEventForIcon();
+        }
+
+        function prepareIngredientsListOfMeal(meal) {
+            let carbs = 0;
+            let fat = 0;
+            let protein = 0;
+            let energy = 0;
+            let mealAminoAcidContent = {
+                isoleucine: 0,
+                leucine: 0,
+                lysine: 0,
+                methionine: 0,
+                cysteine: 0,
+                phenylalaninePlusTyrosine: 0,
+                threonine: 0,
+                tryptophan: 0,
+                valine: 0,
+                histidine: 0
+            };
+            let content = '<div class=\"row\">';
+            content += '<div class=\"col-sm-12 my-2 h-3\">Posiłek zapisany z numerem: ' + meal.id + '</div>';
+
+            meal.ingredientList.forEach(food => {
+                let data = getFoodData(food.name);
+                let fractureOfOneHundred = food.weight / 100;
+                carbs += data.carbs * fractureOfOneHundred;
+                fat += data.fat * fractureOfOneHundred;
+                protein += data.protein * fractureOfOneHundred;
+                energy += data.energy * fractureOfOneHundred;
+                mealAminoAcidContent.isoleucine += data.isoleucine * data.digestability;
+                mealAminoAcidContent.leucine += data.leucine * data.digestability;
+                mealAminoAcidContent.lysine += data.lysine * data.digestability;
+                mealAminoAcidContent.methionine += data.methionine * data.digestability;
+                mealAminoAcidContent.cysteine += data.cysteine * data.digestability;
+                mealAminoAcidContent.phenylalaninePlusTyrosine += data.phenylalanine * data.digestability;
+                mealAminoAcidContent.phenylalaninePlusTyrosine += data.tyrosine * data.digestability;
+                mealAminoAcidContent.threonine += data.threonine * data.digestability;
+                mealAminoAcidContent.tryptophan += data.tryptophan * data.digestability;
+                mealAminoAcidContent.valine += data.valine * data.digestability;
+                mealAminoAcidContent.histidine += data.histidine * data.digestability;
+                content += '<div class=\"col-sm-12\">Składnik: ' + food.name + ', masa: ' + food.weight + 'g</div>';
+            });
+
+            content += '<div class=\"col-sm-12\">';
+            content += '<div class=\"row\"><div class=\"col-sm-6\">Suma Węglowodanów: ' + carbs + 'g</div>';
+            content += '<div class=\"col-sm-6\">Suma Białka: ' + protein + 'g</div>';
+            content += '<div class=\"col-sm-6\">Suma Tłuszczów: ' + fat + 'g</div>';
+            content += '<div class=\"col-sm-6\">Suma kaloryczności: ' + energy + 'kcal</div>';
+            content += '</div></div>';
+            content += '<div class=\"col-sm-2 my-2\" data-purpose=\"table\" id=' + meal.id + '>\
+            <button class=\"btn btn-success w-100\" data-toggle=\"collapse\" data-target=\"#table' + meal.id + '\">\
+            <i class="bi bi-graph-up-arrow"></i></button></div>';
+            content+= '<div class=\"col-sm-6 collapse\" id=\"table' + meal.id + '\"> Izoleucyna:' +
+            mealAminoAcidContent.isoleucine +
+            'Leucyna: ' + mealAminoAcidContent.leucine + '</div>';
+            content += '</div>';
+
+            $(content).appendTo('#mealSummary');
+
+        };
+
+        function getFoodData(foodName) {
+            var detailData;
+            ingredientsDetailData.forEach(food => {
+                if(food.name == foodName) {
+                    detailData = food;
+                    console.log(food);
+                    return;
+                }
+            })
+            return detailData;
+        }
+
+    });
+
+</script>
+</body>
+</html>

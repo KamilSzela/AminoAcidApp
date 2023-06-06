@@ -104,21 +104,28 @@
         });
 
         function getIngredientsData() {
+            var ingredientData;
+            if(sessionStorage.getItem("ingredientData") == null) {
                 const response = fetch('/commonIngredients/getAll').then( (response) => {
-                const contentType = response.headers.get('content-type');
-                if(response.ok && contentType.includes('application/json')){
-                    return response.json();
-                }
-            }).then( (json) => {
-                prepareSummary(json[0]);
-                prepareChart(json[0]);
-                $('#ingredientPicker').html(createList(json));
-                $('#ingredientPicker').change(function() {
-                    refreshSite(json);
+                    const contentType = response.headers.get('content-type');
+                    if(response.ok && contentType.includes('application/json')){
+                        return response.json();
+                    }
+                }).then( (json) => {
+                    sessionStorage.setItem("ingredientData", JSON.stringify(json));
+                    ingredientData = json;
                 });
-                $('#bodyWeightInput').change(function() {
-                    refreshSite(json);
-                });
+            } else {
+                ingredientData = JSON.parse(sessionStorage.getItem("ingredientData"));
+            }
+            prepareSummary(ingredientData[0]);
+            prepareChart(ingredientData[0]);
+            $('#ingredientPicker').html(createList(ingredientData));
+            $('#ingredientPicker').change(function() {
+                refreshSite(ingredientData);
+            });
+            $('#bodyWeightInput').change(function() {
+                refreshSite(ingredientData);
             });
         }
 
