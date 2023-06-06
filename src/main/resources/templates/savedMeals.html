@@ -68,6 +68,7 @@
 		$('.popover-dismiss').popover({
 		  trigger: 'focus'
 		})
+		$('.collapse').collapse();
 </script>
 <script>
     $(document).ready(function() {
@@ -139,8 +140,20 @@
             let fat = 0;
             let protein = 0;
             let energy = 0;
+            let mealAminoAcidContent = {
+                isoleucine: 0,
+                leucine: 0,
+                lysine: 0,
+                methionine: 0,
+                cysteine: 0,
+                phenylalaninePlusTyrosine: 0,
+                threonine: 0,
+                tryptophan: 0,
+                valine: 0,
+                histidine: 0
+            };
             let content = '<div class=\"row\">';
-            content += '<div class=\"col-sm-12 my-2\">Posiłek zapisany z numerem: ' + meal.id + '</div>';
+            content += '<div class=\"col-sm-12 my-2 h-3\">Posiłek zapisany z numerem: ' + meal.id + '</div>';
 
             meal.ingredientList.forEach(food => {
                 let data = getFoodData(food.name);
@@ -149,16 +162,32 @@
                 fat += data.fat * fractureOfOneHundred;
                 protein += data.protein * fractureOfOneHundred;
                 energy += data.energy * fractureOfOneHundred;
+                mealAminoAcidContent.isoleucine += data.isoleucine * data.digestability;
+                mealAminoAcidContent.leucine += data.leucine * data.digestability;
+                mealAminoAcidContent.lysine += data.lysine * data.digestability;
+                mealAminoAcidContent.methionine += data.methionine * data.digestability;
+                mealAminoAcidContent.cysteine += data.cysteine * data.digestability;
+                mealAminoAcidContent.phenylalaninePlusTyrosine += data.phenylalanine * data.digestability;
+                mealAminoAcidContent.phenylalaninePlusTyrosine += data.tyrosine * data.digestability;
+                mealAminoAcidContent.threonine += data.threonine * data.digestability;
+                mealAminoAcidContent.tryptophan += data.tryptophan * data.digestability;
+                mealAminoAcidContent.valine += data.valine * data.digestability;
+                mealAminoAcidContent.histidine += data.histidine * data.digestability;
                 content += '<div class=\"col-sm-12\">Składnik: ' + food.name + ', masa: ' + food.weight + 'g</div>';
             });
 
             content += '<div class=\"col-sm-12\">';
-            content += '<div class=\"row\"><div class=\"col-sm-6\">Meal Carbs: ' + carbs + '</div>';
-            content += '<div class=\"col-sm-6\">Meal Protein: ' + protein + '</div>';
-            content += '<div class=\"col-sm-6\">Meal Fat: ' + fat + '</div>';
-            content += '<div class=\"col-sm-6\">Meal Energy: ' + energy + '</div>';
+            content += '<div class=\"row\"><div class=\"col-sm-6\">Suma Węglowodanów: ' + carbs + 'g</div>';
+            content += '<div class=\"col-sm-6\">Suma Białka: ' + protein + 'g</div>';
+            content += '<div class=\"col-sm-6\">Suma Tłuszczów: ' + fat + 'g</div>';
+            content += '<div class=\"col-sm-6\">Suma kaloryczności: ' + energy + 'kcal</div>';
             content += '</div></div>';
-            content += '<div class=\"col-sm-12\" data-purpose=\"table\" id=' + meal.id + '><i class="bi bi-graph-up-arrow"></i></div>';
+            content += '<div class=\"col-sm-2 my-2\" data-purpose=\"table\" id=' + meal.id + '>\
+            <button class=\"btn btn-success w-100\" data-toggle=\"collapse\" data-target=\"#table' + meal.id + '\">\
+            <i class="bi bi-graph-up-arrow"></i></button></div>';
+            content+= '<div class=\"col-sm-6 collapse\" id=\"table' + meal.id + '\"> Izoleucyna:' +
+            mealAminoAcidContent.isoleucine +
+            'Leucyna: ' + mealAminoAcidContent.leucine + '</div>';
             content += '</div>';
 
             $(content).appendTo('#mealSummary');
@@ -169,18 +198,12 @@
             var detailData;
             ingredientsDetailData.forEach(food => {
                 if(food.name == foodName) {
-                    //console.log(food);
                     detailData = food;
+                    console.log(food);
                     return;
                 }
             })
             return detailData;
-        }
-
-        function addEventForIcon() {
-            $('div[data-purpose="table"]').click(function() {
-                alert("table preparing");
-            });
         }
 
     });
