@@ -47,3 +47,9 @@
             color: red;
             transform: scale(1.2);
         }
+        .font_1_25{
+            font-size: 1.25rem;
+        }
+        .n5_margin_top{
+            margin-top: -5rem;
+        }
