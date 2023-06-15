@@ -20,11 +20,12 @@
                 <div class="row justify-content-center">
                     <h2>Zaloguj się do aplikacji</h2>
                 </div>
-                <div class="row justify-content-center bg-success py-2">
-                    <div class="col-sm-7 form-group ">
+                <div class="row justify-content-center lightBlue-background py-2">
+                    <div class="col-sm-8 form-group pl-5">
                         <div class="row w-100 justify-content-center">
                             <label for="emailField" class="font_1_25 justify-content-center">Wprowadź adres email</label>
-                            <input type="email" class="w-100" id="emailField" pattern="^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$">
+                            <input type="email" class="w-100 form-control" id="emailField"
+                                   pattern="^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$">
                         </div>
                         <div class="row w-100 justify-content-center">
                             <label for="passwordField" class="font_1_25">Wprowadź hasło</label>
@@ -35,11 +36,18 @@
                                   class="btn popover-dismiss color-black" tabindex="0">
                                 <span><i class="bi bi-info-circle"></i></span>
                             </a>
-                            <input type="password" class="w-100" id="passwordField"
+                            <input type="password" class="w-100 form-control" id="passwordField"
                                    pattern="(?=.*[a-zA-Z])(?=.*\d)(?=.*[!#\$%&\*\?])[a-zA-Z\d!#\$%\&\*\?]{8,}">
                         </div>
                         <div class="row w-100 mt-3">
+                            <p class="text-danger" id="errorText"></p>
+                        </div>
+                        <div class="row w-100 mt-3">
                             <button class="btn btn-primary w-100" id="loginButton">Zaloguj</button>
+                        </div>
+                        <div class="row w-100 mt-3 justify-content-center">
+                            <p class="text-danger">Nie masz jeszcze konta?</p>
+                            <button class="btn btn-primary w-100" id="signInButton">Zarejestruj się</button>
                         </div>
                     </div>
                 </div>
@@ -62,9 +70,38 @@
 		})
 </script>
 <script>
-    $('#loginButton').click(function(){
-        alert("click");
-    });
+    $(document).ready(function(){
+        $('#loginButton').click(function(){
+            if(checkIfEmailIsCorrect() && checkIfPasswordIsCorrect()) {
+                $('#errorText').html('');
+                logUserIn();
+            }
+        });
+        function checkIfEmailIsCorrect() {
+            var emailValue = $('#emailField').val();
+            const pattern = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/;
+            if(emailValue != "" && pattern.test(emailValue)) {
+                return true;
+            }
+            $('#errorText').html('Wprowadzony email nie jest poprawny');
+            return false;
+        }
+
+        function checkIfPasswordIsCorrect() {
+            var passwordValue = $('#passwordField').val();
+            const pattern = /(?=.*[a-zA-Z])(?=.*\d)(?=.*[!#\$%&\*\?])[a-zA-Z\d!#\$%\&\*\?]{8,}/;
+            if(passwordValue != "" && pattern.test(passwordValue)) {
+                return true;
+            }
+            $('#errorText').html('Wprowadzone hasło nie jest poprawne - patrz na zasady tworzenia hasła (ikonka i)');
+            return false;
+        }
+
+        function logUserIn() {
+            alert('logowanie');
+        }
+    })
+
 </script>
 </body>
 </html>
