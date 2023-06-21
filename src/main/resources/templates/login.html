@@ -40,7 +40,7 @@
                                    pattern="(?=.*[a-zA-Z])(?=.*\d)(?=.*[!#\$%&\*\?])[a-zA-Z\d!#\$%\&\*\?]{8,}">
                         </div>
                         <div class="row w-100 mt-3">
-                            <p class="text-danger" id="errorText"></p>
+                            <div class="col-sm-12 text-center" id="errorText"></div>
                         </div>
                         <div class="row w-100 mt-3">
                             <button class="btn btn-primary w-100" id="loginButton">Zaloguj</button>
@@ -69,21 +69,28 @@
 		  trigger: 'focus'
 		})
 </script>
-<script>
+<script charset="UTF-8">
     $(document).ready(function(){
+
         $('#loginButton').click(function(){
             if(checkIfEmailIsCorrect() && checkIfPasswordIsCorrect()) {
                 $('#errorText').html('');
                 logUserIn();
             }
         });
+
+        function User (email, password) {
+            this.email = email;
+            this.password = password;
+        }
+
         function checkIfEmailIsCorrect() {
             var emailValue = $('#emailField').val();
             const pattern = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/;
             if(emailValue != "" && pattern.test(emailValue)) {
                 return true;
             }
-            $('#errorText').html('Wprowadzony email nie jest poprawny');
+            $('#errorText').html('<p class=\"text-danger\">Wprowadzony email nie jest poprawny</p>');
             return false;
         }
 
@@ -93,12 +100,32 @@
             if(passwordValue != "" && pattern.test(passwordValue)) {
                 return true;
             }
-            $('#errorText').html('Wprowadzone hasło nie jest poprawne - patrz na zasady tworzenia hasła (ikonka i)');
+            $('#errorText').html('<p class=\"text-danger\">Wprowadzone hasło nie jest poprawne - patrz na zasady tworzenia hasła (ikonka i)</p>');
             return false;
         }
 
-        function logUserIn() {
-            alert('logowanie');
+         async function logUserIn() {
+            var emailValue = $('#emailField').val();
+            var passwordValue = $('#passwordField').val();
+            var usersData = new User(emailValue, passwordValue);
+            const res = await fetch("/newUser",{
+                method: "POST",
+                cache: "no-cache",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(usersData),
+            }).then(response => {
+                var json = response.json();
+                console.log(json);
+                return json;
+            }).then(json => {
+                $('#errorText').html('<p class=\"text-success\">' + json + '</p>');
+                setTimeout(redirectToHome, 2000);
+            });
+        }
+        function redirectToHome() {
+            window.location.replace("/");
         }
     })
 
