@@ -1,9 +1,10 @@
 package pl.aminoacidswebapp.szelakamil.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.*;
+
 import java.util.List;
 
 @Entity

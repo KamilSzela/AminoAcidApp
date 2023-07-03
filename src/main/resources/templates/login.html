@@ -12,7 +12,7 @@
 <div class="container custom-background h-100">
     <a class="d-none" href="http://www.freepik.com">Background designed by starline / Freepik</a>
 
-    <div class="row mx-4 py-3 bg-dark" th:include="navbar :: navbar-copy"></div>
+    <div class="row mx-4 py-3 bg-dark" th:replace="~{navbar.html :: navbar-copy}"></div>
 
     <main class="h-100">
         <div class="px-5 h-100 row d-flex align-items-center justify-content-center n5_margin_top">
@@ -20,31 +20,35 @@
                 <div class="row justify-content-center">
                     <h2>Zaloguj się do aplikacji</h2>
                 </div>
-                <div class="row justify-content-center lightBlue-background py-2">
+                <div class="row justify-content-center lightBlue-background py-2" >
                     <div class="col-sm-8 form-group pl-5">
-                        <div class="row w-100 justify-content-center">
-                            <label for="emailField" class="font_1_25 justify-content-center">Wprowadź adres email</label>
-                            <input type="email" class="w-100 form-control" id="emailField"
-                                   pattern="^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$">
-                        </div>
-                        <div class="row w-100 justify-content-center">
-                            <label for="passwordField" class="font_1_25">Wprowadź hasło</label>
-                            <a role="button" data-toggle="popover" data-trigger="focus"
-                                  title="Wymaganie odnośnie hasła"
-                                  data-content="Hasło musi mieć co najmniej 8 znaków, zawierać w sobie
+                        <form th:action="@{/login}" method="post">
+                            <div class="row w-100 justify-content-center">
+                                <label for="username" class="font_1_25 justify-content-center">Wprowadź adres email</label>
+                                <input type="email" class="w-100 form-control" id="username"
+                                       pattern="^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
+                                       name="username">
+                            </div>
+                            <div class="row w-100 justify-content-center">
+                                <label for="password" class="font_1_25">Wprowadź hasło</label>
+                                <a role="button" data-toggle="popover" data-trigger="focus"
+                                   title="Wymaganie odnośnie hasła"
+                                   data-content="Hasło musi mieć co najmniej 8 znaków, zawierać w sobie
                                     co najmniej jedną cyfrę oraz znak specjalny z listy: [!,#,$,%,&,*,?]"
-                                  class="btn popover-dismiss color-black" tabindex="0">
-                                <span><i class="bi bi-info-circle"></i></span>
-                            </a>
-                            <input type="password" class="w-100 form-control" id="passwordField"
-                                   pattern="(?=.*[a-zA-Z])(?=.*\d)(?=.*[!#\$%&\*\?])[a-zA-Z\d!#\$%\&\*\?]{8,}">
-                        </div>
-                        <div class="row w-100 mt-3">
-                            <div class="col-sm-12 text-center" id="errorText"></div>
-                        </div>
-                        <div class="row w-100 mt-3">
-                            <button class="btn btn-primary w-100" id="loginButton">Zaloguj</button>
-                        </div>
+                                   class="btn popover-dismiss color-black" tabindex="0">
+                                    <span><i class="bi bi-info-circle"></i></span>
+                                </a>
+                                <input type="password" class="w-100 form-control" id="password"
+                                       pattern="(?=.*[a-zA-Z])(?=.*\d)(?=.*[!#\$%&\*\?\-])[a-zA-Z\d!#\$%\&\*\?\-]{8,}"
+                                       name="password">
+                            </div>
+                            <div class="row w-100 mt-3">
+                                <div class="col-sm-12 text-center" id="errorText"></div>
+                            </div>
+                            <div class="row w-100 mt-3">
+                                <button class="btn btn-primary w-100" id="loginButton" type="submit">Zaloguj</button>
+                            </div>
+                        </form>
                         <div class="row w-100 mt-3 justify-content-center">
                             <p class="text-danger">Nie masz jeszcze konta?</p>
                             <button class="btn btn-primary w-100" id="signInButton">Zarejestruj się</button>
@@ -72,20 +76,15 @@
 <script charset="UTF-8">
     $(document).ready(function(){
 
-        $('#loginButton').click(function(){
+        $('form').submit(function(){
             if(checkIfEmailIsCorrect() && checkIfPasswordIsCorrect()) {
                 $('#errorText').html('');
-                logUserIn();
-            }
+                return true;
+            } else return false;
         });
 
-        function User (email, password) {
-            this.email = email;
-            this.password = password;
-        }
-
         function checkIfEmailIsCorrect() {
-            var emailValue = $('#emailField').val();
+            var emailValue = $('#username').val();
             const pattern = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/;
             if(emailValue != "" && pattern.test(emailValue)) {
                 return true;
@@ -95,8 +94,8 @@
         }
 
         function checkIfPasswordIsCorrect() {
-            var passwordValue = $('#passwordField').val();
-            const pattern = /(?=.*[a-zA-Z])(?=.*\d)(?=.*[!#\$%&\*\?])[a-zA-Z\d!#\$%\&\*\?]{8,}/;
+            var passwordValue = $('#password').val();
+            const pattern = /(?=.*[a-zA-Z])(?=.*\d)(?=.*[!#\$%&\*\?\-])[a-zA-Z\d!#\$%\&\*\?\-]{8,}/;
             if(passwordValue != "" && pattern.test(passwordValue)) {
                 return true;
             }
@@ -104,30 +103,7 @@
             return false;
         }
 
-         async function logUserIn() {
-            var emailValue = $('#emailField').val();
-            var passwordValue = $('#passwordField').val();
-            var usersData = new User(emailValue, passwordValue);
-            const res = await fetch("/newUser",{
-                method: "POST",
-                cache: "no-cache",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(usersData),
-            }).then(response => {
-                var json = response.json();
-                console.log(json);
-                return json;
-            }).then(json => {
-                $('#errorText').html('<p class=\"text-success\">' + json + '</p>');
-                setTimeout(redirectToHome, 2000);
-            });
-        }
-        function redirectToHome() {
-            window.location.replace("/");
-        }
-    })
+});
 
 </script>
 </body>

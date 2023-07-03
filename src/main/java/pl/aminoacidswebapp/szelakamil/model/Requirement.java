@@ -1,6 +1,7 @@
 package pl.aminoacidswebapp.szelakamil.model;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
+
 
 @Entity
 @Table(name = "requirements")

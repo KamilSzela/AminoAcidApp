@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 
 <body>
-<div th:fragment="navbar-copy">
+<div class="row mx-4 py-3 bg-dark" th:fragment="navbar-copy">
     <div class="col-sm-9 col-xs-12">
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
             <a class="navbar-brand home-icon" href="/"><i class="bi bi-house"></i></a>
@@ -25,7 +25,7 @@
                         </a>
                     </li>
                     <li class="nav-item text-white menu-item font-weight-bold">
-                        <a class="text-white" th:href="@{savedMeals}">
+                        <a class="text-white" th:href="@{/savedMeals}">
                             <i class="bi bi-folder2-open"></i>
                             <span class="ml-1">Zapisane posiłki</span>
                         </a>
@@ -40,11 +40,17 @@
             </div>
         </nav>
     </div>
-    <div class="col-sm-3 text-right d-none d-md-block">
+    <div class="col-sm-3 text-right d-none d-md-block" sec:authorize="!isAuthenticated()">
         <a class="btn btn-primary" th:href="@{/login}">Zaloguj się</a>
     </div>
-    <div class="col-xs-12 w-100 mx-2 d-block d-md-none">
+    <div class="col-xs-12 w-100 mx-2 d-block d-md-none" sec:authorize="!isAuthenticated()">
         <a class="btn btn-primary w-100 mb-2" th:href="@{/login}">Zaloguj się</a>
+    </div>
+    <div class="col-sm-3 text-right d-none d-md-block" sec:authorize="isAuthenticated()">
+        <a class="btn btn-primary" th:href="@{/logout}">Wyloguj się</a>
+    </div>
+    <div class="col-xs-12 w-100 mx-2 d-block d-md-none" sec:authorize="isAuthenticated()">
+        <a class="btn btn-primary w-100 mb-2" th:href="@{/logout}">Wyloguj się</a>
     </div>
 </div>
 

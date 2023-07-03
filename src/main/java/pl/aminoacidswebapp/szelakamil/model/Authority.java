@@ -1,9 +1,9 @@
 package pl.aminoacidswebapp.szelakamil.model;
 
 
+import jakarta.persistence.*;
 import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.*;
 @Entity
 @Table(name = "authorities")
 public class Authority {
