@@ -38,14 +38,6 @@ public class LoginController {
         return "login";
     }
 
-    @ResponseBody
-    @RequestMapping(value = "/logUserIn", consumes = MediaType.APPLICATION_JSON_VALUE,
-    produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    ResponseEntity<String> logUserIn(@RequestBody User userData) {
-        String answer = "Poprawnie zalogowano użytkownika. Nastąpi przekierowanie do strony głównej.";
-        return  ResponseEntity
-                .status(HttpStatus.OK)
-                .body(gson.toJson(answer));
-    }
+
 
 }
