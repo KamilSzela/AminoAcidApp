@@ -24,14 +24,15 @@ public class SecurityInstructions {
                             "/img/*",
                             "/css/*",
                             "/login",
-                            "/logUserIn").permitAll();
+                            "/register").permitAll();
                     requests.requestMatchers("/savedMeals").authenticated();
                 })
                 .formLogin()
                 .loginPage("/login")
                 .failureForwardUrl("/")
-                .successForwardUrl("/")
                 .permitAll();
+        http.logout().logoutSuccessUrl("/");
+        http.headers().frameOptions().disable();
         http.httpBasic();
         return http.build();
     }
