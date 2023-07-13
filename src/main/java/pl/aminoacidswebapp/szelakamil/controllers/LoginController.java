@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -49,6 +50,10 @@ public class LoginController {
             String hashedPwd = passwordEncoder.encode(userData.getPassword());
             userData.setPassword(hashedPwd);
 
+            if(!repository.findByEmail(userData.getEmail()).isEmpty()){
+                throw new BadCredentialsException("Użytkownik o podanym adresie Email już istnieje w bazie");
+            }
+
             savedCustomer = repository.save(userData);
 
             Authority authority = new Authority();
@@ -61,7 +66,12 @@ public class LoginController {
                         .status(HttpStatus.CREATED)
                         .body("User successfully created!");
             }
-        } catch (Exception ex) {
+        } catch (BadCredentialsException ex) {
+            response = ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(ex);
+        }
+        catch (Exception ex) {
             response = ResponseEntity
                     .status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Unexpected error occurred" + ex.getMessage());

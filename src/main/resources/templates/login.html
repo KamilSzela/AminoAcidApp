@@ -84,27 +84,32 @@
             } else return false;
         });
 
-        function User (email, password, authorities) {
+        function User (email, password) {
             this.email = email;
             this.password = password;
-            this.authorities = authorities;
         }
 
         $('#signInButton').click(function() {
-<!--            window.location.replace("/newUser")-->
             let email = $('#username').val();
             let pwd = $('#password').val();
             if(checkIfEmailIsCorrect() && checkIfPasswordIsCorrect()) {
-                let user = JSON.stringify(new User(email, pwd, ['ROLE_USER']));
-                console.log(user);
+                let user = JSON.stringify(new User(email, pwd));
                 $.post({
                     url: "/register",
                     contentType: "application/json",
-                    data: user,
-                  function(data) {
-                     alert(data);
-                     console.log(data);
-                  }
+                    data: user
+               }).done(function(response) {
+                    if(response == "User successfully created!") {
+                        $('#errorText').html('Utworzono nowego użytkownika. Nastąpi przekierowanie do strony głównej');
+                        $('#errorText').css('color', 'black');
+                        setTimeout(goToHomePage, 3000);
+                     } else {
+                        $('#errorText').html(response);
+                     }
+               }).fail(function(response) {
+                    message = response.responseJSON.message;
+                    $('#errorText').html(message);
+                    $('#errorText').css('color', 'red');
                });
             } else {
                 console.log("Incorrect data");
@@ -130,7 +135,9 @@
             $('#errorText').html('<p class=\"text-danger\">Wprowadzone hasło nie jest poprawne - patrz na zasady tworzenia hasła (ikonka i)</p>');
             return false;
         }
-
+        function goToHomePage() {
+            window.location.replace("/");
+        }
 });
 
 </script>
