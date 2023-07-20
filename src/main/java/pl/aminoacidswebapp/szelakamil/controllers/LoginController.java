@@ -79,4 +79,11 @@ public class LoginController {
         return response;
     }
 
+    public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
+    }
+
+    public void setAuthRepository(AuthRepository authRepository) {
+        this.authRepository = authRepository;
+    }
 }
