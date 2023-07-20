@@ -12,8 +12,7 @@
 <div class="container custom-background">
     <a class="d-none" href="http://www.freepik.com">Background designed by starline / Freepik</a>
 
-    <div class="row mx-4 py-3 bg-dark" th:include="navbar :: navbar-copy"></div>
-
+    <div class="row mx-4 py-3 bg-dark" th:replace="~{navbar.html :: navbar-copy}"></div>
 
     <main>
         <div class="container px-5">
@@ -24,8 +23,9 @@
                <div class="col-lg-5 col-sm-12 form-group">
                    <div class="row">
                        <div class="col-sm-6"><label for="ingredientPicker">Wybierz składnik z listy</label></div>
-                       <div class="col-sm-6"><select class="form-control" id="ingredientPicker">
-                       </select></div>
+                       <div class="col-sm-6">
+                           <select class="form-control" id="ingredientPicker"></select>
+                       </div>
                    </div>
                </div>
                <div class="col-lg-4 col-sm-12 input-group mb-4">
