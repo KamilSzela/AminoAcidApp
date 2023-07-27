@@ -17,7 +17,7 @@ public class Food {
     private Float energy;
     private Float carbs;
     private Float fat;
-    private Float digestability;
+    private Float digestibility;
 
     private Integer isoleucine;
     private Integer leucine;
@@ -82,12 +82,12 @@ public class Food {
         this.fat = fat;
     }
 
-    public Float getDigestability() {
-        return digestability;
+    public Float getDigestibility() {
+        return digestibility;
     }
 
-    public void setDigestability(Float digestability) {
-        this.digestability = digestability;
+    public void setDigestibility(Float digestibility) {
+        this.digestibility = digestibility;
     }
 
     public Integer getIsoleucine() {

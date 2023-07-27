@@ -140,7 +140,7 @@
             innerHtml += '<div class=\"col-sm-6\"> Ilość białka: ' + ingredient.protein + 'g</div>';
             innerHtml += '<div class=\"col-sm-6\"> Ilość węglowodanów: ' + ingredient.carbs + 'g</div>';
             innerHtml += '<div class=\"col-sm-6\"> Ilość tłuszczu: ' + ingredient.fat + 'g</div>';
-            innerHtml += '<div class=\"col-sm-12\"> Przyswajalność białka: ' + ingredient.digestability * 100 + '%</div>';
+            innerHtml += '<div class=\"col-sm-12\"> Przyswajalność białka: ' + ingredient.digestibility * 100 + '%</div>';
             $('#summaryContainer').html(innerHtml);
         }
 
@@ -169,7 +169,7 @@
                 requirements.histidine * mass
              ];
 
-            let digestibility = ingredient.digestability;
+            let digestibility = ingredient.digestibility;
 
             let digestibilityCorrectedAminoAcidsAmount = [
                 (ingredient.isoleucine * digestibility).toFixed(0),

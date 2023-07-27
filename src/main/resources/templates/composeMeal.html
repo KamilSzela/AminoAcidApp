@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -55,6 +55,9 @@
                     </table>
                 </div>
             </div>
+            <div class="row" sec:authorize="isAuthenticated()">
+                <button class="btn btn-primary" id="saveMealButton">Zapisz posiłek w bazie</button>
+            </div>
             <div class="row text-center my-1" id="summaryContainer">
                 <div class="col-sm-12"><h4> Podsumowanie wartości odżywczych posiłku: </h4> </div>
                 <div class="col-sm-12 text-center">
@@ -94,7 +97,7 @@
     </main>
 </div>
 
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -154,6 +157,9 @@
             $('#addToListBtn').click(function() {
                 appendToList();
             });
+                $('#saveMealButton').click(function() {
+                saveMealInDb();
+            });
         }
 
         function appendToList() {
@@ -168,7 +174,7 @@
             }
 
             let ingredientToList = {};
-            ingredientToList.id = ingredientId;
+            ingredientToList.ingredientId = ingredientId;
             ingredientToList.name = name;
             ingredientToList.mass = mass;
 
@@ -217,7 +223,7 @@
             var fat = 0;
             var energy = 0;
             ingredientShortList.forEach( element => {
-                let ingredient = ingredientData[element.id -1];
+                let ingredient = ingredientData[element.ingredientId -1];
                 let fractionOfStandardMass = element.mass / 100;
                 protein += ingredient.protein * fractionOfStandardMass;
                 carbs += ingredient.carbs * fractionOfStandardMass;
@@ -270,22 +276,23 @@
             };
 
             ingredientShortList.forEach(element => {
-                let index = element.id - 1;
+                let index = element.ingredientId - 1;
                 let fractionOfStandardMass = element.mass / 100;
-                mealAminoAcidContent.isoleucine += parseFloat(ingredientData[index].isoleucine *
-                fractionOfStandardMass);
-                mealAminoAcidContent.leucine += ingredientData[index].leucine * fractionOfStandardMass;
-                mealAminoAcidContent.lysine += ingredientData[index].lysine * fractionOfStandardMass;
-                mealAminoAcidContent.methionine += ingredientData[index].methionine * fractionOfStandardMass;
-                mealAminoAcidContent.cysteine += ingredientData[index].cysteine * fractionOfStandardMass;
-                mealAminoAcidContent.phenylalaninePlusTyrosine += ingredientData[index].phenylalanine *
-                fractionOfStandardMass;
-                mealAminoAcidContent.phenylalaninePlusTyrosine += ingredientData[index].tyrosine *
-                fractionOfStandardMass;
-                mealAminoAcidContent.threonine += ingredientData[index].threonine * fractionOfStandardMass;
-                mealAminoAcidContent.tryptophan += ingredientData[index].tryptophan * fractionOfStandardMass;
-                mealAminoAcidContent.valine += ingredientData[index].valine * fractionOfStandardMass;
-                mealAminoAcidContent.histidine += ingredientData[index].histidine * fractionOfStandardMass;
+                let digestibility = ingredientData[index].digestibility;
+                mealAminoAcidContent.isoleucine += Math.round(ingredientData[index].isoleucine *
+                fractionOfStandardMass * digestibility);
+                mealAminoAcidContent.leucine += Math.round(ingredientData[index].leucine * fractionOfStandardMass * digestibility);
+                mealAminoAcidContent.lysine += Math.round(ingredientData[index].lysine * fractionOfStandardMass * digestibility);
+                mealAminoAcidContent.methionine += Math.round(ingredientData[index].methionine * fractionOfStandardMass * digestibility);
+                mealAminoAcidContent.cysteine += Math.round(ingredientData[index].cysteine * fractionOfStandardMass * digestibility);
+                mealAminoAcidContent.phenylalaninePlusTyrosine += Math.round(ingredientData[index].phenylalanine *
+                fractionOfStandardMass * digestibility);
+                mealAminoAcidContent.phenylalaninePlusTyrosine += Math.round(ingredientData[index].tyrosine *
+                fractionOfStandardMass * digestibility);
+                mealAminoAcidContent.threonine += Math.round(ingredientData[index].threonine * fractionOfStandardMass * digestibility);
+                mealAminoAcidContent.tryptophan += Math.round(ingredientData[index].tryptophan * fractionOfStandardMass * digestibility);
+                mealAminoAcidContent.valine += Math.round(ingredientData[index].valine * fractionOfStandardMass * digestibility);
+                mealAminoAcidContent.histidine += Math.round(ingredientData[index].histidine * fractionOfStandardMass * digestibility);
             });
 
              const labels = [
@@ -393,6 +400,27 @@
             innerHtml += '</tbody>';
             $('#aminoAcidsTab').html(innerHtml);
         };
+
+        function saveMealInDb() {
+            let date = new Date();
+            let meal = new Meal(date, ingredientShortList);
+            let mealJson = JSON.stringify(meal);
+            $.post({
+                    url: "/newMeal",
+                    contentType: "application/json",
+                    data: mealJson
+               }).done(function(response) {
+                    console.log(response);
+               }).fail(function(response) {
+                    alert("failed");
+                    console.log(response);
+               });
+        };
+
+        function Meal (dateSaved, ingredients) {
+            this.dateSaved = dateSaved;
+            this.ingredients = ingredients;
+        }
     });
 
 
