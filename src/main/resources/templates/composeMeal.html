@@ -58,6 +58,9 @@
             <div class="row" sec:authorize="isAuthenticated()">
                 <button class="btn btn-primary" id="saveMealButton">Zapisz posiłek w bazie</button>
             </div>
+            <div class="row justify-content-center">
+                <p class="text-center h2" id="responseText"></p>
+            </div>
             <div class="row text-center my-1" id="summaryContainer">
                 <div class="col-sm-12"><h4> Podsumowanie wartości odżywczych posiłku: </h4> </div>
                 <div class="col-sm-12 text-center">
@@ -124,9 +127,9 @@
 
         let ingredientShortList = new Array();
 
-        function prepareList() {
+        async function prepareList() {
             if(sessionStorage.getItem("ingredientData") == null) {
-                const response = fetch('/commonIngredients/getAll').then( (response) => {
+                const response = await fetch('/commonIngredients/getAll').then( (response) => {
                     const contentType = response.headers.get('content-type');
                     if(response.ok && contentType.includes('application/json')){
                         return response.json();
@@ -146,7 +149,7 @@
         }
 
         function createList(json) {
-            let htmlPrepared;
+            let htmlPrepared = "";
             json.forEach( option => {
                 htmlPrepared += '<option value="' + option.id + '">' + option.name + '</option>';
             });
@@ -403,6 +406,11 @@
 
         function saveMealInDb() {
             let date = new Date();
+            if(ingredientShortList.length == 0){
+                $('#responseText').css('color', 'red');
+                $('#responseText').html("Posiłek powinien zawierać przynajmniej jeden składnik.");
+                return;
+            }
             let meal = new Meal(date, ingredientShortList);
             let mealJson = JSON.stringify(meal);
             $.post({
@@ -411,8 +419,18 @@
                     data: mealJson
                }).done(function(response) {
                     console.log(response);
+                    if(response == "Data received") {
+                        $('#responseText').css('color', 'green');
+                        $('#responseText').html("Zapisano nowy posiłek w bazie! Możesz skomponować kolejny.");
+                        let length = ingredientShortList.length;
+                        ingredientShortList.splice(0, length);
+                        $('#ingredientTableBody').html('');
+                        $('#summaryContainer').html("");
+                        $('#aminoAcidsTab').html("");
+                        prepareChart();
+                    }
                }).fail(function(response) {
-                    alert("failed");
+                    alert("Błąd w zapisie posiłku w bazie");
                     console.log(response);
                });
         };
