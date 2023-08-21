@@ -35,6 +35,7 @@ public class ComposeMealController {
         newMeal.setUser(user);
 
         Meal savedMeal = mealRepository.save(newMeal);
+        System.out.println("Saved Meal date format: " + savedMeal.getDateSaved());
         List<MealIngredient> ingredients = newMeal.getIngredients();
         ingredients.forEach(ingredient -> {
             ingredient.setMeal(savedMeal);

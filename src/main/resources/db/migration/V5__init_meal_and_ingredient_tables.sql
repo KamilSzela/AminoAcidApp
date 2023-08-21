@@ -3,6 +3,7 @@ CREATE TABLE meals(
 id INT NOT NULL auto_increment,
 user_id INT NOT NULL,
 date_saved DATE NOT NULL,
+caloricity int not null,
 PRIMARY KEY (`id`),
 CONSTRAINT `meals_fk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
 );

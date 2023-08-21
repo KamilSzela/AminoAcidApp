@@ -24,6 +24,9 @@ public class Meal {
     @OneToMany(mappedBy = "meal", fetch = FetchType.EAGER)
     private List<MealIngredient> ingredients;
 
+    @Column(name = "caloricity")
+    Integer caloricity;
+
     public Integer getId() {
         return id;
     }
@@ -54,5 +57,13 @@ public class Meal {
 
     public void setIngredients(List<MealIngredient> ingredients) {
         this.ingredients = ingredients;
+    }
+
+    public Integer getCaloricity() {
+        return caloricity;
+    }
+
+    public void setCaloricity(Integer caloricity) {
+        this.caloricity = caloricity;
     }
 }

@@ -411,7 +411,12 @@
                 $('#responseText').html("Posiłek powinien zawierać przynajmniej jeden składnik.");
                 return;
             }
-            let meal = new Meal(date, ingredientShortList);
+            var caloricity = 0;
+            ingredientShortList.forEach(el => {
+                let ingredient = ingredientData[el.ingredientId -1];
+                caloricity += parseInt(ingredient.energy * (el.mass / 100));
+            });
+            let meal = new Meal(date, ingredientShortList, caloricity);
             let mealJson = JSON.stringify(meal);
             $.post({
                     url: "/newMeal",
@@ -435,9 +440,10 @@
                });
         };
 
-        function Meal (dateSaved, ingredients) {
+        function Meal (dateSaved, ingredients, caloricity) {
             this.dateSaved = dateSaved;
             this.ingredients = ingredients;
+            this.caloricity = caloricity;
         }
     });
 
