@@ -3,10 +3,8 @@ package pl.aminoacidswebapp.szelakamil.controllers;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import pl.aminoacidswebapp.szelakamil.model.AuthRepository;
-import pl.aminoacidswebapp.szelakamil.model.Authority;
 import pl.aminoacidswebapp.szelakamil.model.User;
 import pl.aminoacidswebapp.szelakamil.model.UserRepository;
 
@@ -14,8 +12,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 

@@ -187,6 +187,7 @@
 
         function prepareMealList() {
             $('#ingredientTableBody').html('');
+            $('#responseText').html('');
             ingredientShortList.forEach((element, index) => {
                 let rowPrepared = '<tr scope="row"> <td>' + (index + 1) + '</td>';
                 rowPrepared += '<td>' + element.name + '</td>';

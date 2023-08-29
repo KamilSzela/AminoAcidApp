@@ -10,5 +10,6 @@ public interface MealRepository {
 
     List<Meal> findByDateSavedBetween(Date dateStart, Date dateEnd);
 
-    List<Meal> findByCaloricityBetween(int lowerLimit, int upperLimit);
+    List<Meal> findByCaloricityBetweenAndUserId(int lowerLimit, int upperLimit, int userId);
+    List<Meal> findByCaloricityBetweenAndUserIdAndDateSavedBetween(int lowerLimit, int upperLimit, int userId, Date dateStart, Date dateEnd);
 }
