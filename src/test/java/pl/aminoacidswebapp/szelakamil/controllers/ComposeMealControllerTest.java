@@ -25,7 +25,7 @@ public class ComposeMealControllerTest {
         //when
         ResponseEntity response = controller.saveNewMeal(createSampleEmptyMeal(), auth);
         //then
-        assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
         assertEquals("Posiłek powinien zawierać przynajmniej jeden składnik!",
                 response.getBody().toString());
     }
@@ -47,7 +47,7 @@ public class ComposeMealControllerTest {
         //when
         ResponseEntity response = controller.saveNewMeal(createSampleMeal(), auth);
         //then
-        assertEquals(response.getStatusCode(), HttpStatus.CREATED);
+        assertEquals(HttpStatus.CREATED, response.getStatusCode());
         assertEquals("Data received",
                 response.getBody().toString());
     }
