@@ -15,7 +15,7 @@
     <div class="row mx-4 py-3 bg-dark" th:replace="~{navbar.html :: navbar-copy}"></div>
 
     <main class="h-100">
-        <div class="container px-5 h-100">
+        <div class="container px-5 h-100 o-scroll">
             <div class="row">
                 <div class="col-sm-12">
                     <h2>Lista zapisanych posiłków</h2>
@@ -53,19 +53,9 @@
                 <div class="col-sm-12"><p id="responseText"></p></div>
             </div>
             <div class="row" >
-                <div class="col-sm-12" id="mealSummary">Placeholder - meal list</div>
-            </div>
-            <div class="row">
-                <div class="col-sm-12" th:each="meal: ${Meals}">
-                    <ul>
-                        <li th:text="${meal.dateSaved}"></li>
-                        <li th:text="'Kaloryczność: ' + ${meal.caloricity}"></li>
-                        <ul th:each="ingredient: ${meal.ingredients}">
-                            <li th:text="${ingredient.ingredientId}"></li>
-                            <li th:text="${ingredient.name}"></li>
-                            <li th:text="${ingredient.mass}"></li>
-                        </ul>
-                    </ul>
+                <div class="col-sm-12" id="mealSummary">
+                    <p>Wciśnięcie przycisku "Wypisz listę posiłków" pokaże listę wszystkich Twoich posiłków.</p>
+                    <p>Użyj filtrów aby otrzymać listę z określonymi wymaganiami.</p>
                 </div>
             </div>
         </div>
@@ -153,16 +143,16 @@
                         upperCaloricityLimit: upperCaloricityLimit
                     }
                }).done(function(response) {
-                    console.log(response);
                     $('#mealSummary').html('');
+                    $('#responseText').html('');
                     prepareMealDisplayList(response);
                }).fail(function(response) {
-                    if(response.status == 401) {
+                    $('#mealSummary').html('');
+                    if(response.status == 400) {
                         $('#responseText').html('<p class=\"text-danger\">Nie znaleziono posiłków dla podanych danych.</p>');
                     } else if (response.status == 500) {
                         $('#responseText').html('<p class=\"text-danger\">Wystąpił błąd w aplikacji.</p>');
                     }
-                    console.log(response);
                });
         }
         function prepareMealDisplayList(response) {
@@ -188,11 +178,11 @@
                 histidine: 0
             };
 
-            let content = '<div class=\"row\">';
-            content += '<div class=\"col-sm-12 my-2 h-3\">Posiłek zapisany z numerem: ' + meal.id + '</div>';
-
+            let content = '<div class=\"row mx-2\">';
+            content += '<div class=\"col-sm-12 my-2 h-3\"><p class=\"h-3\">Posiłek zapisany z numerem: ' + meal.id + '</p></div>';
+            content += '<div class=\"col-sm-12\"><ul>';
             meal.ingredients.forEach(food => {
-                let data = ingredientsDetailData[food.id - 1];
+                let data = ingredientsDetailData[food.ingredientId - 1];
                 let fractureOfOneHundred = food.mass / 100;
                 carbs += data.carbs * fractureOfOneHundred;
                 fat += data.fat * fractureOfOneHundred;
@@ -209,9 +199,9 @@
                 mealAminoAcidContent.tryptophan += data.tryptophan * data.digestibility * fractureOfOneHundred;
                 mealAminoAcidContent.valine += data.valine * data.digestibility * fractureOfOneHundred;
                 mealAminoAcidContent.histidine += data.histidine * data.digestibility * fractureOfOneHundred;
-                content += '<div class=\"col-sm-12\">Składnik: ' + food.name + ', masa: ' + food.mass + 'g</div>';
+                content += '<li>Składnik: ' + food.name + ', masa: ' + food.mass + 'g</li>';
             });
-
+            content += '</ul></div>';
             content += '<div class=\"col-sm-12\">';
             content += '<div class=\"row\"><div class=\"col-sm-6\">Suma Węglowodanów: ' + carbs.toFixed(1) + 'g</div>';
             content += '<div class=\"col-sm-6\">Suma Białka: ' + protein.toFixed(1) + 'g</div>';
@@ -229,7 +219,7 @@
             <button class=\"btn btn-success w-100\" data-toggle=\"collapse\" data-target=\"#table' + meal.id + '\">\
             <i class="bi bi-graph-up-arrow"></i></button></div>';
 
-            content += '<div class=\"col-sm-8 my-2 collapse\" id=\"table' + meal.id + '\">';
+            content += '<div class=\"col-md-8 col-sm-12 my-2 collapse\" id=\"table' + meal.id + '\">';
             content += '<table class=\"table table-dark table-striped\">';
             content += '<thead>';
             content += '<tr><th scope=\"col\">Aminokwas</th><th scope=\"col\">masa [mg]</th>';
@@ -238,13 +228,13 @@
             content += '</thead>';
             content += '<tbody>';
             var counter = 0;
-            console.log("Counter: " + counter);
+
             for (const [key, value] of Object.entries(mealAminoAcidContent)) {
 
                 if(counter == 0) {
                     content += '<tr>';
                 }
-                content += '<td>' + key + '</td><td>' + value + '</td>';
+                content += '<td>' + key + '</td><td>' + value.toFixed(0) + '</td>';
                 counter++;
                 if(counter >= 2) {
                     content += '</tr>';
@@ -261,7 +251,7 @@
         }
 
         function createChartOfAminoAcidInMeal(mealAminoAcidContent, meal) {
-            let content = '<div class=\"col-sm-6 my-2\"><canvas id=\"chart' + meal.id + '\"></canvas></div>';
+            let content = '<div class=\"col-sm-6 my-2 d-none d-md-flex\"><canvas id=\"chart' + meal.id + '\"></canvas></div>';
             $(content).appendTo('#mealSummary');
             const labels = [
                 'Izoleucyna',
