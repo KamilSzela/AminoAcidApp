@@ -24,8 +24,9 @@ public class SecurityInstructions {
                             "/img/*",
                             "/css/*",
                             "/login",
-                            "/register").permitAll();
-                    requests.requestMatchers("/savedMeals").hasAnyRole("USER", "ADMIN");
+                            "/register",
+                            "/getMeals").permitAll();
+                    requests.requestMatchers("/savedMeals", "/newMeal").hasAnyRole("USER", "ADMIN");
                 })
                 .formLogin()
                 .loginPage("/login")

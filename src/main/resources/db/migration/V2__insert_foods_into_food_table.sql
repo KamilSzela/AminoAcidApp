@@ -1,5 +1,5 @@
 INSERT INTO foods
-(name, protein, energy, carbs, fat, digestability, isoleucine, leucine, lysine, methionine, cysteine, phenylalanine, tyrosine, threonine, tryptophan, valine, histidine) VALUES
+(name, protein, energy, carbs, fat, digestibility, isoleucine, leucine, lysine, methionine, cysteine, phenylalanine, tyrosine, threonine, tryptophan, valine, histidine) VALUES
 ('Fonio', 7.11, 374.32, 79.72, 3, 1, 315, 772, 205, 441, 221, 402, 284, 315, 111, 457, 165),
 ('Jęczmień', 12.5, 354, 73.5, 2.3, 0.9, 421, 784, 406, 196, 267, 603, 365, 389, 0, 592, 248),
 ('Gryka', 13.2, 343, 71.5, 3.4, 0.8, 415, 720, 464, 183, 293, 464, 293, 439, 0, 817, 255),

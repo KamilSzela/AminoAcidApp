@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" class="h-100">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,14 +8,14 @@
     <link rel="stylesheet" th:href="@{/css/styles.css}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
 </head>
-<body>
-<div class="container custom-background">
+<body class="h-100">
+<div class="container custom-background h-100">
     <a class="d-none" href="http://www.freepik.com">Background designed by starline / Freepik</a>
 
     <div class="row mx-4 py-3 bg-dark" th:replace="~{navbar.html :: navbar-copy}"></div>
 
-    <main>
-        <div class="container px-5">
+    <main class="h-100">
+        <div class="container px-5 h-100 o-scroll">
             <div class="row">
                 <div class="col-sm-12">
                     <h2>Lista zapisanych posiłków</h2>
@@ -49,14 +49,20 @@
                     <button class="btn btn-success w-100" id="listButton">Wypisz listę posiłków</button>
                 </div>
             </div>
+            <div class="row">
+                <div class="col-sm-12"><p id="responseText"></p></div>
+            </div>
             <div class="row" >
-                <div class="col-sm-12" id="mealSummary">Placeholder - meal list</div>
+                <div class="col-sm-12" id="mealSummary">
+                    <p>Wciśnięcie przycisku "Wypisz listę posiłków" pokaże listę wszystkich Twoich posiłków.</p>
+                    <p>Użyj filtrów aby otrzymać listę z określonymi wymaganiami.</p>
+                </div>
             </div>
         </div>
     </main>
 </div>
 
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -92,6 +98,7 @@
         var meal2 = new Meal(2, 1, list2, new Date("2023-03-15"), 1015);
 
         var mealsList = [meal1, meal2];
+
         var ingredientsDetailData;
         getDataFromDb();
 
@@ -114,27 +121,45 @@
 
         $('#listButton').click(function() {
             let beginDatePassedValue = $('#beginDate').val() == "" ? "1970-01-01" : $('#beginDate').val();
-            let endDatePassedValue = $('#endDate').val() == "" ? "2050-01-01" : $('#endDate').val();
-            let beginDate = new Date(beginDatePassedValue);
-            let endDate = new Date(endDatePassedValue);
+            let endDatePassedValue = $('#endDate').val() == "" ? "2100-01-01" : $('#endDate').val();
+
+            let beginDate = new Date(beginDatePassedValue).toISOString();
+            let endDate = new Date(endDatePassedValue).toISOString();
+
             let bottomCaloricity = $('#bottomCaloricity').val() == "" ? 0 : $('#bottomCaloricity').val();
             let topCaloricity = $('#topCaloricity').val() == "" ? 10000 : $('#topCaloricity').val();
 
-            prepareMealList(beginDate, endDate, bottomCaloricity, topCaloricity);
+            prepareMealListDataFromDb(beginDate, endDate, bottomCaloricity, topCaloricity);
         });
 
-        function prepareMealList(beginDate = new Date(), endDate = new Date(), lowCalorie = 0, highCalorie = 10000) {
-            $('#mealSummary').html("");
-            mealsList.forEach(meal => {
-                if(meal.date > beginDate && meal.date < endDate) {
-                    if(meal.caloricity > lowCalorie && meal.caloricity < highCalorie) {
-                        prepareIngredientsListOfMeal(meal);
+        function prepareMealListDataFromDb(startDate, endDate, lowerCaloricityLimit = 0, upperCaloricityLimit = 10000) {
+               $.get({
+                    url: "/getMeals",
+                    contentType: "application/json",
+                    data: {
+                        startDate: startDate,
+                        endDate: endDate,
+                        lowerCaloricityLimit: lowerCaloricityLimit,
+                        upperCaloricityLimit: upperCaloricityLimit
                     }
-                }
-            });
-            addEventForIcon();
+               }).done(function(response) {
+                    $('#mealSummary').html('');
+                    $('#responseText').html('');
+                    prepareMealDisplayList(response);
+               }).fail(function(response) {
+                    $('#mealSummary').html('');
+                    if(response.status == 400) {
+                        $('#responseText').html('<p class=\"text-danger\">Nie znaleziono posiłków dla podanych danych.</p>');
+                    } else if (response.status == 500) {
+                        $('#responseText').html('<p class=\"text-danger\">Wystąpił błąd w aplikacji.</p>');
+                    }
+               });
         }
-
+        function prepareMealDisplayList(response) {
+            response.forEach(meal => {
+                prepareIngredientsListOfMeal(meal);
+            });
+        }
         function prepareIngredientsListOfMeal(meal) {
             let carbs = 0;
             let fat = 0;
@@ -152,47 +177,153 @@
                 valine: 0,
                 histidine: 0
             };
-            let content = '<div class=\"row\">';
-            content += '<div class=\"col-sm-12 my-2 h-3\">Posiłek zapisany z numerem: ' + meal.id + '</div>';
 
-            meal.ingredientList.forEach(food => {
-                let data = getFoodData(food.name);
-                let fractureOfOneHundred = food.weight / 100;
+            let content = '<div class=\"row mx-2\">';
+            content += '<div class=\"col-sm-12 my-2 h-3\"><p class=\"h-3\">Posiłek zapisany z numerem: ' + meal.id + '</p></div>';
+            content += '<div class=\"col-sm-12\"><ul>';
+            meal.ingredients.forEach(food => {
+                let data = ingredientsDetailData[food.ingredientId - 1];
+                let fractureOfOneHundred = food.mass / 100;
                 carbs += data.carbs * fractureOfOneHundred;
                 fat += data.fat * fractureOfOneHundred;
                 protein += data.protein * fractureOfOneHundred;
                 energy += data.energy * fractureOfOneHundred;
-                mealAminoAcidContent.isoleucine += data.isoleucine * data.digestability;
-                mealAminoAcidContent.leucine += data.leucine * data.digestability;
-                mealAminoAcidContent.lysine += data.lysine * data.digestability;
-                mealAminoAcidContent.methionine += data.methionine * data.digestability;
-                mealAminoAcidContent.cysteine += data.cysteine * data.digestability;
-                mealAminoAcidContent.phenylalaninePlusTyrosine += data.phenylalanine * data.digestability;
-                mealAminoAcidContent.phenylalaninePlusTyrosine += data.tyrosine * data.digestability;
-                mealAminoAcidContent.threonine += data.threonine * data.digestability;
-                mealAminoAcidContent.tryptophan += data.tryptophan * data.digestability;
-                mealAminoAcidContent.valine += data.valine * data.digestability;
-                mealAminoAcidContent.histidine += data.histidine * data.digestability;
-                content += '<div class=\"col-sm-12\">Składnik: ' + food.name + ', masa: ' + food.weight + 'g</div>';
+                mealAminoAcidContent.isoleucine += data.isoleucine * data.digestibility * fractureOfOneHundred;
+                mealAminoAcidContent.leucine += data.leucine * data.digestibility * fractureOfOneHundred;
+                mealAminoAcidContent.lysine += data.lysine * data.digestibility * fractureOfOneHundred;
+                mealAminoAcidContent.methionine += data.methionine * data.digestibility * fractureOfOneHundred;
+                mealAminoAcidContent.cysteine += data.cysteine * data.digestibility * fractureOfOneHundred;
+                mealAminoAcidContent.phenylalaninePlusTyrosine += data.phenylalanine * data.digestibility * fractureOfOneHundred;
+                mealAminoAcidContent.phenylalaninePlusTyrosine += data.tyrosine * data.digestibility * fractureOfOneHundred;
+                mealAminoAcidContent.threonine += data.threonine * data.digestibility * fractureOfOneHundred;
+                mealAminoAcidContent.tryptophan += data.tryptophan * data.digestibility * fractureOfOneHundred;
+                mealAminoAcidContent.valine += data.valine * data.digestibility * fractureOfOneHundred;
+                mealAminoAcidContent.histidine += data.histidine * data.digestibility * fractureOfOneHundred;
+                content += '<li>Składnik: ' + food.name + ', masa: ' + food.mass + 'g</li>';
             });
-
+            content += '</ul></div>';
             content += '<div class=\"col-sm-12\">';
-            content += '<div class=\"row\"><div class=\"col-sm-6\">Suma Węglowodanów: ' + carbs + 'g</div>';
-            content += '<div class=\"col-sm-6\">Suma Białka: ' + protein + 'g</div>';
-            content += '<div class=\"col-sm-6\">Suma Tłuszczów: ' + fat + 'g</div>';
-            content += '<div class=\"col-sm-6\">Suma kaloryczności: ' + energy + 'kcal</div>';
+            content += '<div class=\"row\"><div class=\"col-sm-6\">Suma Węglowodanów: ' + carbs.toFixed(1) + 'g</div>';
+            content += '<div class=\"col-sm-6\">Suma Białka: ' + protein.toFixed(1) + 'g</div>';
+            content += '<div class=\"col-sm-6\">Suma Tłuszczów: ' + fat.toFixed(1) + 'g</div>';
+            content += '<div class=\"col-sm-6\">Suma kaloryczności: ' + energy.toFixed(0) + 'kcal</div>';
             content += '</div></div>';
-            content += '<div class=\"col-sm-2 my-2\" data-purpose=\"table\" id=' + meal.id + '>\
+            $(content).appendTo('#mealSummary');
+
+            createMealAminoAcidTable(mealAminoAcidContent, meal);
+            createChartOfAminoAcidInMeal(mealAminoAcidContent, meal);
+        };
+
+        function createMealAminoAcidTable(mealAminoAcidContent, meal) {
+            let content = '<div class=\"col-sm-2 my-2\" data-purpose=\"table\" id=' + meal.id + '>\
             <button class=\"btn btn-success w-100\" data-toggle=\"collapse\" data-target=\"#table' + meal.id + '\">\
             <i class="bi bi-graph-up-arrow"></i></button></div>';
-            content+= '<div class=\"col-sm-6 collapse\" id=\"table' + meal.id + '\"> Izoleucyna:' +
-            mealAminoAcidContent.isoleucine +
-            'Leucyna: ' + mealAminoAcidContent.leucine + '</div>';
+
+            content += '<div class=\"col-md-8 col-sm-12 my-2 collapse\" id=\"table' + meal.id + '\">';
+            content += '<table class=\"table table-dark table-striped\">';
+            content += '<thead>';
+            content += '<tr><th scope=\"col\">Aminokwas</th><th scope=\"col\">masa [mg]</th>';
+            content += '<th scope=\"col\">Aminokwas</th><th scope=\"col\">masa [mg]</th>';
+            content += '</tr>';
+            content += '</thead>';
+            content += '<tbody>';
+            var counter = 0;
+
+            for (const [key, value] of Object.entries(mealAminoAcidContent)) {
+
+                if(counter == 0) {
+                    content += '<tr>';
+                }
+                content += '<td>' + key + '</td><td>' + value.toFixed(0) + '</td>';
+                counter++;
+                if(counter >= 2) {
+                    content += '</tr>';
+                    counter = 0;
+                }
+
+            }
+            content += '</tbody>';
+
+            content += '</table>'
             content += '</div>';
 
             $(content).appendTo('#mealSummary');
+        }
 
-        };
+        function createChartOfAminoAcidInMeal(mealAminoAcidContent, meal) {
+            let content = '<div class=\"col-sm-6 my-2 d-none d-md-flex\"><canvas id=\"chart' + meal.id + '\"></canvas></div>';
+            $(content).appendTo('#mealSummary');
+            const labels = [
+                'Izoleucyna',
+                'Leucyna',
+                'Lizyna',
+                'Metionina',
+                'Cysteina',
+                'Fenyloalanina + Tyrozyna',
+                'Treonina',
+                'Tryptofan',
+                'Walina',
+                'Histydyna'
+            ];
+            const data = {
+                labels: labels,
+                datasets: [
+                    {
+                      label: 'Zawartość aminokwasów w posiłku',
+                      backgroundColor: function(context){
+                         const chart = context.chart;
+                         const {ctx, chartArea} = chart;
+                         const name = "aminoacids";
+                             if (!chartArea) {
+                              return;
+                            }
+                            return getGradient(ctx, chartArea, name);
+                      },
+                      data: Object.values(mealAminoAcidContent),
+                    }
+                ]
+            };
+
+            const config = {
+                type: 'bar',
+                data: data,
+                options: {
+                    responsive:true,
+                }
+            };
+            let chartName = 'chart' + meal.id;
+            const myChart = new Chart(
+                document.getElementById(chartName),
+                config
+            );
+
+        }
+
+        function getGradient(ctx, chartArea, name) {
+              let width, height, gradient;
+              const chartWidth = chartArea.right - chartArea.left;
+              const chartHeight = chartArea.bottom - chartArea.top;
+              if (!gradient || width !== chartWidth || height !== chartHeight) {
+                width = chartWidth;
+                height = chartHeight;
+                gradient = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
+                gradient = amountGraphGradient(gradient, name)
+          }
+          return gradient;
+        }
+
+        function amountGraphGradient(gradient, name) {
+            if(name == 'requirements') {
+                gradient.addColorStop(0, 'rgba(6, 1, 89, 1)');
+                gradient.addColorStop(0.25, 'rgba(46, 46, 159, 1)');
+                gradient.addColorStop(0.7, 'rgba(14, 192, 228, 1)');
+            } else if (name == 'aminoacids') {
+                gradient.addColorStop(0, 'rgba(66, 14, 7, 1)');
+                gradient.addColorStop(0.25, 'rgba(170, 87, 12, 1)');
+                gradient.addColorStop(0.7, 'rgba(238, 176, 90, 1)');
+            }
+            return gradient;
+        }
 
         function getFoodData(foodName) {
             var detailData;

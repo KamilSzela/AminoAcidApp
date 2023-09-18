@@ -56,3 +56,6 @@
         .lightBlue-background{
             background-color: #74a1d091;
         }
+        .o-scroll{
+            overflow: scroll;
+        }
